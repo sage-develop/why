@@ -55,13 +55,3 @@ START: Client Assessment
 ### 4. **Interest Rate Products**
 - **Interest Rate Swap (IRS):** For clients with pure interest rate risk
 - **Cross Currency Swap (CCS):** For clients with both FX and interest rate risk
-
-## Products
-### 1. FX Spot - Bank Buys
-### 2. FX Spot - Bank Sells
-### 3. FX Forward Contract - Bank Buys
-### 4. FX Forward Contract - Bank Sells
-### 5. FX Call Option
-### 6. FX Put Option
-### 7. Interest Rate Swap
-### 8. Cross Currency Swap

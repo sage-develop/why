@@ -15,6 +15,17 @@
   foreign customers and may need to sell this foreign currency to the bank
 
 
+## Products
+### 1. FX Spot - Bank Buys
+### 2. FX Spot - Bank Sells
+### 3. FX Forward Contract - Bank Buys
+### 4. FX Forward Contract - Bank Sells
+### 5. FX Call Option
+### 6. FX Put Option
+### 7. Interest Rate Swap
+### 8. Cross Currency Swap
+
+
 ## Prompt
 
 """
