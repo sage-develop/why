@@ -156,7 +156,6 @@ const useQuestionStore = create<QuestionState>((set, get) => ({
   },
 
   navigateToPrevious: () => {
-    const { currentQuestionIndex } = get()
     const currentQuestion = get().currentQuestion
 
     if (!currentQuestion) return
@@ -174,7 +173,6 @@ const useQuestionStore = create<QuestionState>((set, get) => ({
   },
 
   navigateToNext: () => {
-    const { currentQuestionIndex } = get()
     const currentQuestion = get().currentQuestion
 
     if (!currentQuestion) return

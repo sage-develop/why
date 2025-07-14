@@ -12,7 +12,6 @@ interface QuestionSectionProps {
   isComplete: boolean
   progress: number
   isLoading: boolean
-  onAnswerSubmit: (data: FormData) => void
   onSkipQuestion: () => void
 }
 
@@ -21,10 +20,9 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
   isComplete,
   progress,
   isLoading,
-  onAnswerSubmit,
   onSkipQuestion
 }) => {
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm<FormData>()
+  const { register, reset, watch, setValue, formState: { errors } } = useForm<FormData>()
   const {
     navigateToPrevious,
     navigateToNext,
@@ -43,16 +41,16 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
       reset()
       const currentAnswer = getCurrentAnswer(currentQuestion.id)
       if (currentAnswer && currentAnswer.selectedOptions.length > 0) {
-        reset({ selectedOption: currentAnswer.selectedOptions[0] })
+        setValue('selectedOption', currentAnswer.selectedOptions[0])
       }
     }
-  }, [currentQuestion, reset, getCurrentAnswer])
+  }, [currentQuestion, reset, getCurrentAnswer, setValue])
 
   // Auto-update recommendations when user changes answer
   React.useEffect(() => {
     if (currentQuestion && watchedOption) {
       const currentAnswer = getCurrentAnswer(currentQuestion.id)
-      if (currentAnswer && currentAnswer.selectedOptions[0] !== watchedOption) {
+      if (!currentAnswer || currentAnswer.selectedOptions[0] !== watchedOption) {
         // Debounce the update to avoid too many recalculations
         const timeoutId = setTimeout(() => {
           updateAnswer(currentQuestion.id, watchedOption)
@@ -65,14 +63,15 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
 
   const handleAnswerChange = (optionId: string) => {
     if (currentQuestion) {
+      setValue('selectedOption', optionId)
       updateAnswer(currentQuestion.id, optionId)
     }
   }
 
-  const handleRemoveAnswer = () => {
+  const handleClearSelection = () => {
     if (currentQuestion) {
       removeAnswer(currentQuestion.id)
-      reset()
+      setValue('selectedOption', '')
     }
   }
 
@@ -80,6 +79,12 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
   const totalQuestions = getTotalQuestions()
   const canNavigatePrevious = currentQuestionIndex > 1
   const canNavigateNext = currentQuestionIndex < totalQuestions
+
+  // Show clear button if there's a saved answer or current selection
+  const currentAnswer = currentQuestion ? getCurrentAnswer(currentQuestion.id) : null
+  const hasSavedAnswer = currentAnswer?.selectedOptions && currentAnswer.selectedOptions.length > 0
+  const hasCurrentSelection = watchedOption && watchedOption.length > 0
+  const showClearButton = hasSavedAnswer || hasCurrentSelection
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -151,7 +156,7 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
                 <input
                   type="radio"
                   value={option.id}
-                  {...register('selectedOption', { required: 'Please select an option' })}
+                  {...register('selectedOption')}
                   className="mr-3 text-blue-600 focus:ring-blue-500"
                   onChange={() => handleAnswerChange(option.id)}
                 />
@@ -167,22 +172,11 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
           )}
 
           <div className="flex gap-3 pt-4">
-            {!currentQuestion.required && (
+            {/* Clear Button - show if there's a saved answer or current selection */}
+            {showClearButton && (
               <button
                 type="button"
-                onClick={onSkipQuestion}
-                disabled={isLoading}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Skip
-              </button>
-            )}
-
-            {/* Remove Answer Button - only show if question has an answer */}
-            {getCurrentAnswer(currentQuestion.id) && (
-              <button
-                type="button"
-                onClick={handleRemoveAnswer}
+                onClick={handleClearSelection}
                 disabled={isLoading}
                 className="px-4 py-3 border border-red-300 text-red-700 rounded-lg font-medium hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >

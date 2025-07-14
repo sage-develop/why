@@ -4,15 +4,8 @@ import {
   Header,
   ProductRecommendations,
   QuestionSection,
-  UserProfileSummary,
-  QuestionNavigation,
-  RecommendationChanges,
-  AnswerSummary
+  UserProfileSummary
 } from '../components'
-
-interface FormData {
-  selectedOption: string
-}
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -20,17 +13,10 @@ const HomePage = () => {
     userProfile,
     currentQuestion,
     recommendations,
-    previousRecommendations,
     isLoading,
-    submitAnswer,
     skipQuestion,
-    navigateToQuestion,
     getQuestionProgress
   } = useQuestionStore()
-
-  const handleAnswerSubmit = (data: FormData) => {
-    submitAnswer(data.selectedOption)
-  }
 
   const handleSkipQuestion = () => {
     skipQuestion()
@@ -38,10 +24,6 @@ const HomePage = () => {
 
   const handleProductClick = (productId: string) => {
     navigate(`/product/${encodeURIComponent(productId)}`)
-  }
-
-  const handleQuestionSelect = (questionId: string) => {
-    navigateToQuestion(questionId)
   }
 
   // Calculate progress using store method
@@ -62,28 +44,12 @@ const HomePage = () => {
                 isComplete={isComplete}
                 progress={progress}
                 isLoading={isLoading}
-                onAnswerSubmit={handleAnswerSubmit}
                 onSkipQuestion={handleSkipQuestion}
               />
             </div>
 
             {/* Sidebar with Navigation and Recommendations */}
             <div className="space-y-6">
-              {/* Question Navigation */}
-              {/* <QuestionNavigation
-                currentQuestionId={currentQuestion?.id || ''}
-                onQuestionSelect={handleQuestionSelect}
-              /> */}
-
-              {/* Answer Summary */}
-              {/* <AnswerSummary onQuestionSelect={handleQuestionSelect} /> */}
-
-              {/* Recommendation Changes */}
-              {/* <RecommendationChanges
-                recommendations={recommendations}
-                previousRecommendations={previousRecommendations}
-              /> */}
-
               {/* Product Recommendations */}
               <ProductRecommendations
                 recommendations={recommendations}
