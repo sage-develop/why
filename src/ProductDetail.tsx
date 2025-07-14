@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { RelatedProducts } from './components'
@@ -6,8 +7,6 @@ import { getProductsInSameFamily, getProductFamilyName } from './products-utils'
 
 interface ProductDetailProps {
   productId: string
-  onBack: () => void
-  onRelatedProductClick: (productId: string) => void
 }
 
 interface ProductData {
@@ -16,7 +15,8 @@ interface ProductData {
   section?: string
 }
 
-const ProductDetail = ({ productId, onBack, onRelatedProductClick }: ProductDetailProps) => {
+const ProductDetail = ({ productId }: ProductDetailProps) => {
+  const navigate = useNavigate()
   const [productData, setProductData] = useState<ProductData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -76,6 +76,14 @@ const ProductDetail = ({ productId, onBack, onRelatedProductClick }: ProductDeta
     loadProductData()
   }, [productId])
 
+  const handleBack = () => {
+    navigate('/')
+  }
+
+  const handleRelatedProductClick = (relatedProductId: string) => {
+    navigate(`/product/${encodeURIComponent(relatedProductId)}`)
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -104,7 +112,7 @@ const ProductDetail = ({ productId, onBack, onRelatedProductClick }: ProductDeta
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Product</h2>
                 <p className="text-gray-600 mb-6">{error}</p>
                 <button
-                  onClick={onBack}
+                  onClick={handleBack}
                   className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Go Back
@@ -129,7 +137,7 @@ const ProductDetail = ({ productId, onBack, onRelatedProductClick }: ProductDeta
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <button
-                onClick={onBack}
+                onClick={handleBack}
                 className="flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,7 +183,7 @@ const ProductDetail = ({ productId, onBack, onRelatedProductClick }: ProductDeta
           {/* Related Products */}
           <RelatedProducts
             products={relatedProducts}
-            onProductClick={onRelatedProductClick}
+            onProductClick={handleRelatedProductClick}
             familyName={familyName}
           />
         </div>
