@@ -4,10 +4,10 @@ const Header: React.FC = () => {
   return (
     <div className="text-center mb-8">
       <h1 className="text-4xl font-bold text-gray-900 mb-2">
-        Corporate Banking Discovery
+        Questionnaire
       </h1>
       <p className="text-lg text-gray-600">
-        Answer a few questions to discover the best banking solutions for your business
+        Potential questions to ask your clients
       </p>
     </div>
   )

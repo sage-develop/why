@@ -88,6 +88,10 @@ function App() {
     setSelectedProduct(productId)
   }
 
+  const handleRelatedProductClick = (productId: string) => {
+    setSelectedProduct(productId)
+  }
+
   const handleBackToRecommendations = () => {
     setSelectedProduct(null)
   }
@@ -101,6 +105,7 @@ function App() {
       <ProductDetail
         productId={selectedProduct}
         onBack={handleBackToRecommendations}
+        onRelatedProductClick={handleRelatedProductClick}
       />
     )
   }

@@ -35,7 +35,7 @@ const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
 
       {topRecommendations.length > 0 ? (
         <div className="space-y-4">
-          {topRecommendations.map((recommendation, index) => (
+          {topRecommendations.map((recommendation) => (
             <div
               key={recommendation.productId}
               className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"

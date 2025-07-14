@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { RelatedProducts } from './components'
+import { getProductsInSameFamily, getProductFamilyName } from './products-utils'
 
 interface ProductDetailProps {
   productId: string
   onBack: () => void
+  onRelatedProductClick: (productId: string) => void
 }
 
 interface ProductData {
@@ -13,10 +16,14 @@ interface ProductData {
   section?: string
 }
 
-const ProductDetail = ({ productId, onBack }: ProductDetailProps) => {
+const ProductDetail = ({ productId, onBack, onRelatedProductClick }: ProductDetailProps) => {
   const [productData, setProductData] = useState<ProductData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+
+  // Get related products in the same family
+  const relatedProducts = getProductsInSameFamily(productId)
+  const familyName = getProductFamilyName(productId)
 
   useEffect(() => {
     const loadProductData = async () => {
@@ -138,7 +145,7 @@ const ProductDetail = ({ productId, onBack }: ProductDetailProps) => {
           </div>
 
           {/* Product Content */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-strong:text-gray-900 prose-ul:text-gray-700 prose-li:text-gray-700">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -164,6 +171,13 @@ const ProductDetail = ({ productId, onBack }: ProductDetailProps) => {
               </ReactMarkdown>
             </div>
           </div>
+
+          {/* Related Products */}
+          <RelatedProducts
+            products={relatedProducts}
+            onProductClick={onRelatedProductClick}
+            familyName={familyName}
+          />
         </div>
       </div>
     </div>
