@@ -9,18 +9,14 @@ interface FormData {
 
 interface QuestionSectionProps {
   currentQuestion: Question | null
-  isComplete: boolean
   progress: number
   isLoading: boolean
-  onSkipQuestion: () => void
 }
 
 const QuestionSection: React.FC<QuestionSectionProps> = ({
   currentQuestion,
-  isComplete,
   progress,
-  isLoading,
-  onSkipQuestion
+  isLoading
 }) => {
   const { register, reset, watch, setValue, formState: { errors } } = useForm<FormData>()
   const {
@@ -87,11 +83,12 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
   const showClearButton = hasSavedAnswer || hasCurrentSelection
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="mb-6">
+    <div className="bg-white rounded-xl shadow-lg p-6 h-full flex flex-col">
+      {/* Header Section - Fixed Height */}
+      <div className="flex-shrink-0 mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-semibold text-gray-900">
-            {isComplete ? 'All Questions Completed!' : 'Current Question'}
+            Current Question
           </h2>
           <div className="text-sm text-gray-500">
             {progress}% Complete
@@ -107,104 +104,94 @@ const QuestionSection: React.FC<QuestionSectionProps> = ({
         </div>
 
         {/* Navigation Controls */}
-        {!isComplete && (
-          <div className="flex items-center justify-between mt-4">
-            <button
-              type="button"
-              onClick={navigateToPrevious}
-              disabled={!canNavigatePrevious}
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              ← Previous
-            </button>
+        <div className="flex items-center justify-between mt-4">
+          <button
+            type="button"
+            onClick={navigateToPrevious}
+            disabled={!canNavigatePrevious}
+            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Navigate to previous question"
+          >
+            ← Previous
+          </button>
 
-            <div className="text-sm text-gray-500">
-              Question {currentQuestionIndex} of {totalQuestions}
+          <div className="text-sm text-gray-500">
+            Question {currentQuestionIndex} of {totalQuestions}
+          </div>
+
+          <button
+            type="button"
+            onClick={navigateToNext}
+            disabled={!canNavigateNext}
+            className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            aria-label="Navigate to next question"
+          >
+            Next →
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content - Scrollable */}
+      <div className="flex-1 overflow-y-auto">
+        {currentQuestion ? (
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-xl font-medium text-gray-900 mb-2">
+                {currentQuestion.text}
+              </h3>
+              {currentQuestion.description && (
+                <p className="text-gray-600 mb-4">
+                  {currentQuestion.description}
+                </p>
+              )}
             </div>
 
-            <button
-              type="button"
-              onClick={navigateToNext}
-              disabled={!canNavigateNext}
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Next →
-            </button>
+            <div className="grid grid-cols-2 gap-3">
+              {currentQuestion.options.map((option) => (
+                <label
+                  key={option.id}
+                  className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors min-h-[60px]"
+                >
+                  <input
+                    type="radio"
+                    value={option.id}
+                    {...register('selectedOption')}
+                    className="mr-3 text-blue-600 focus:ring-blue-500"
+                    onChange={() => handleAnswerChange(option.id)}
+                  />
+                  <span className="text-gray-900">{option.text}</span>
+                </label>
+              ))}
+            </div>
+
+            {errors.selectedOption && (
+              <p className="text-red-600 text-sm">
+                {errors.selectedOption.message}
+              </p>
+            )}
+
+            {showClearButton && (
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={handleClearSelection}
+                  disabled={isLoading}
+                  className="px-4 py-3 border border-red-300 text-red-700 rounded-lg font-medium hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  aria-label="Clear current selection"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full">
+            <div className="text-center text-gray-500">
+              <p>No questions available</p>
+            </div>
           </div>
         )}
       </div>
-
-      {currentQuestion && !isComplete ? (
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-xl font-medium text-gray-900 mb-2">
-              {currentQuestion.text}
-            </h3>
-            {currentQuestion.description && (
-              <p className="text-gray-600 mb-4">
-                {currentQuestion.description}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-3">
-            {currentQuestion.options.map((option) => (
-              <label
-                key={option.id}
-                className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-              >
-                <input
-                  type="radio"
-                  value={option.id}
-                  {...register('selectedOption')}
-                  className="mr-3 text-blue-600 focus:ring-blue-500"
-                  onChange={() => handleAnswerChange(option.id)}
-                />
-                <span className="text-gray-900">{option.text}</span>
-              </label>
-            ))}
-          </div>
-
-          {errors.selectedOption && (
-            <p className="text-red-600 text-sm">
-              {errors.selectedOption.message}
-            </p>
-          )}
-
-          <div className="flex gap-3 pt-4">
-            {/* Clear Button - show if there's a saved answer or current selection */}
-            {showClearButton && (
-              <button
-                type="button"
-                onClick={handleClearSelection}
-                disabled={isLoading}
-                className="px-4 py-3 border border-red-300 text-red-700 rounded-lg font-medium hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Clear
-              </button>
-            )}
-          </div>
-
-          {/* Real-time feedback */}
-          {watchedOption && (
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">
-                <span className="font-medium">Live Preview:</span> Your selection will update recommendations in real-time.
-              </p>
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <div className="text-green-600 text-6xl mb-4">✓</div>
-          <h3 className="text-xl font-medium text-gray-900 mb-2">
-            All questions completed!
-          </h3>
-          <p className="text-gray-600">
-            Your personalized product recommendations are ready below.
-          </p>
-        </div>
-      )}
     </div>
   )
 }

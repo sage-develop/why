@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useQuestionStore } from '../store'
 import {
+  AnswerSummary,
   Header,
   ProductRecommendations,
   QuestionSection,
@@ -14,21 +15,20 @@ const HomePage = () => {
     currentQuestion,
     recommendations,
     isLoading,
-    skipQuestion,
-    getQuestionProgress
+    getQuestionProgress,
+    navigateToQuestion
   } = useQuestionStore()
-
-  const handleSkipQuestion = () => {
-    skipQuestion()
-  }
 
   const handleProductClick = (productId: string) => {
     navigate(`/product/${encodeURIComponent(productId)}`)
   }
 
+  const handleQuestionSelect = (questionId: string) => {
+    navigateToQuestion(questionId)
+  }
+
   // Calculate progress using store method
   const progress = getQuestionProgress()
-  const isComplete = progress === 100
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -36,27 +36,33 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto">
           <Header />
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          {/* First Row: Question Section and Answer Summary - Fixed Height */}
+          <div className="grid lg:grid-cols-3 gap-8 mb-8 h-[600px]">
             {/* Question Section */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 h-full">
               <QuestionSection
                 currentQuestion={currentQuestion}
-                isComplete={isComplete}
                 progress={progress}
                 isLoading={isLoading}
-                onSkipQuestion={handleSkipQuestion}
               />
             </div>
 
-            {/* Sidebar with Navigation and Recommendations */}
-            <div className="space-y-6">
-              {/* Product Recommendations */}
-              <ProductRecommendations
-                recommendations={recommendations}
-                userProfile={userProfile}
-                onProductClick={handleProductClick}
+            {/* Answer Summary */}
+            <div className="lg:col-span-1 h-full">
+              <AnswerSummary
+                onQuestionSelect={handleQuestionSelect}
+                currentQuestionId={currentQuestion?.id}
               />
             </div>
+          </div>
+
+          {/* Second Row: Product Recommendations */}
+          <div className="mb-8">
+            <ProductRecommendations
+              recommendations={recommendations}
+              userProfile={userProfile}
+              onProductClick={handleProductClick}
+            />
           </div>
 
           <UserProfileSummary userProfile={userProfile} />

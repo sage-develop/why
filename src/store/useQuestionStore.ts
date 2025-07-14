@@ -135,6 +135,28 @@ const useQuestionStore = create<QuestionState>((set, get) => ({
   },
 
   navigateToQuestion: (questionId: string) => {
+    const { userProfile, currentQuestion, recommendations } = get()
+
+    // If there's a current question and it's unanswered, mark it as skipped
+    if (currentQuestion) {
+      const currentAnswer = userProfile.answers.find(a => a.questionId === currentQuestion.id)
+      if (!currentAnswer || currentAnswer.selectedOptions.length === 0) {
+        const skipAnswer: UserAnswer = {
+          questionId: currentQuestion.id,
+          selectedOptions: [],
+          answeredAt: new Date()
+        }
+        const updatedProfile = updateUserProfile(userProfile, skipAnswer)
+        const newRecommendations = calculateProductRecommendations(updatedProfile)
+
+        set({
+          userProfile: updatedProfile,
+          recommendations: newRecommendations,
+          previousRecommendations: recommendations
+        })
+      }
+    }
+
     const question = questions.find(q => q.id === questionId)
     if (!question) return
 
@@ -156,9 +178,27 @@ const useQuestionStore = create<QuestionState>((set, get) => ({
   },
 
   navigateToPrevious: () => {
-    const currentQuestion = get().currentQuestion
+    const { userProfile, currentQuestion, recommendations } = get()
 
     if (!currentQuestion) return
+
+    // If current question is unanswered, mark it as skipped
+    const currentAnswer = userProfile.answers.find(a => a.questionId === currentQuestion.id)
+    if (!currentAnswer || currentAnswer.selectedOptions.length === 0) {
+      const skipAnswer: UserAnswer = {
+        questionId: currentQuestion.id,
+        selectedOptions: [],
+        answeredAt: new Date()
+      }
+      const updatedProfile = updateUserProfile(userProfile, skipAnswer)
+      const newRecommendations = calculateProductRecommendations(updatedProfile)
+
+      set({
+        userProfile: updatedProfile,
+        recommendations: newRecommendations,
+        previousRecommendations: recommendations
+      })
+    }
 
     // Find current question index in all questions
     const allQuestionIndex = questions.findIndex(q => q.id === currentQuestion.id)
@@ -173,9 +213,27 @@ const useQuestionStore = create<QuestionState>((set, get) => ({
   },
 
   navigateToNext: () => {
-    const currentQuestion = get().currentQuestion
+    const { userProfile, currentQuestion, recommendations } = get()
 
     if (!currentQuestion) return
+
+    // If current question is unanswered, mark it as skipped
+    const currentAnswer = userProfile.answers.find(a => a.questionId === currentQuestion.id)
+    if (!currentAnswer || currentAnswer.selectedOptions.length === 0) {
+      const skipAnswer: UserAnswer = {
+        questionId: currentQuestion.id,
+        selectedOptions: [],
+        answeredAt: new Date()
+      }
+      const updatedProfile = updateUserProfile(userProfile, skipAnswer)
+      const newRecommendations = calculateProductRecommendations(updatedProfile)
+
+      set({
+        userProfile: updatedProfile,
+        recommendations: newRecommendations,
+        previousRecommendations: recommendations
+      })
+    }
 
     // Find current question index in all questions
     const allQuestionIndex = questions.findIndex(q => q.id === currentQuestion.id)
