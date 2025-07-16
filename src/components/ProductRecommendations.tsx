@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { type ProductRecommendation } from '../questions'
 import { getProductName, getProductShortDescription } from '../products-utils'
 
@@ -6,18 +6,50 @@ interface ProductRecommendationsProps {
   recommendations: ProductRecommendation[]
   userProfile: { answers: any[] }
   onProductClick: (productId: string) => void
+  previousRecommendations?: ProductRecommendation[]
 }
 
 const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
   recommendations,
   userProfile,
-  onProductClick
+  onProductClick,
+  previousRecommendations = []
 }) => {
   const [showAllProducts, setShowAllProducts] = useState(false)
+  const [highlightedProducts, setHighlightedProducts] = useState<Set<string>>(new Set())
 
   // Get top 8 recommendations for main section
   const topRecommendations = recommendations.slice(0, 8)
   const additionalRecommendations = recommendations.slice(8)
+
+  // Check for new or updated recommendations and highlight them briefly
+  useEffect(() => {
+    if (previousRecommendations.length > 0) {
+      const currentIds = new Set(recommendations.map(r => r.productId))
+      const previousIds = new Set(previousRecommendations.map(r => r.productId))
+
+      const newProducts = recommendations.filter(r => !previousIds.has(r.productId))
+      const updatedProducts = recommendations.filter(r => {
+        const prev = previousRecommendations.find(p => p.productId === r.productId)
+        return prev && Math.abs(prev.score - r.score) > 0.1
+      })
+
+      const productsToHighlight = [...newProducts, ...updatedProducts].map(r => r.productId)
+
+      if (productsToHighlight.length > 0) {
+        setHighlightedProducts(new Set(productsToHighlight))
+
+        // Remove highlight after 3 seconds
+        const timeoutId = setTimeout(() => {
+          setHighlightedProducts(new Set())
+        }, 3000)
+
+        return () => clearTimeout(timeoutId)
+      }
+    }
+  }, [recommendations, previousRecommendations])
+
+  const isHighlighted = (productId: string) => highlightedProducts.has(productId)
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -52,7 +84,10 @@ const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
             {topRecommendations.map((recommendation) => (
               <div
                 key={recommendation.productId}
-                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer bg-white"
+                className={`border rounded-lg p-4 hover:shadow-md transition-all duration-300 cursor-pointer bg-white ${isHighlighted(recommendation.productId)
+                  ? 'border-blue-300 shadow-lg bg-blue-50'
+                  : 'border-gray-200'
+                  }`}
                 onClick={() => onProductClick(recommendation.productId)}
               >
                 <div className="flex flex-col h-full">
@@ -63,6 +98,11 @@ const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
                     <span className="text-xs text-gray-500">
                       {recommendation.family}
                     </span>
+                    {isHighlighted(recommendation.productId) && (
+                      <span className="text-xs font-medium text-blue-600 bg-blue-200 px-2 py-1 rounded animate-pulse">
+                        Updated
+                      </span>
+                    )}
                   </div>
 
                   <div className="flex-1">
@@ -139,7 +179,10 @@ const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
                     {additionalRecommendations.map((recommendation) => (
                       <div
                         key={recommendation.productId}
-                        className="border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow cursor-pointer bg-white"
+                        className={`border rounded-lg p-3 hover:shadow-md transition-all duration-300 cursor-pointer bg-white ${isHighlighted(recommendation.productId)
+                          ? 'border-blue-300 shadow-lg bg-blue-50'
+                          : 'border-gray-200'
+                          }`}
                         onClick={() => onProductClick(recommendation.productId)}
                       >
                         <div className="flex flex-col h-full">
@@ -150,6 +193,11 @@ const ProductRecommendations: React.FC<ProductRecommendationsProps> = ({
                             <span className="text-xs text-gray-500">
                               {recommendation.family}
                             </span>
+                            {isHighlighted(recommendation.productId) && (
+                              <span className="text-xs font-medium text-blue-600 bg-blue-200 px-2 py-1 rounded animate-pulse">
+                                Updated
+                              </span>
+                            )}
                           </div>
 
                           <div className="flex-1">

@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom'
-import { useQuestionStore } from '../store'
 import {
   AnswerSummary,
   Header,
   ProductRecommendations,
   QuestionSection,
+  RecommendationChanges,
   UserProfileSummary
 } from '../components'
+import { useQuestionStore } from '../store'
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const HomePage = () => {
     userProfile,
     currentQuestion,
     recommendations,
+    previousRecommendations,
     isLoading,
     getQuestionProgress,
     navigateToQuestion
@@ -56,12 +58,21 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Second Row: Product Recommendations */}
-          <div className="mb-8">
+          {/* Second Row: Product Recommendations and Changes */}
+          <div className="mb-8 space-y-6">
+            {/* Recommendation Changes Section */}
+
+            <RecommendationChanges
+              recommendations={recommendations}
+              previousRecommendations={previousRecommendations}
+            />
+
+            {/* Product Recommendations */}
             <ProductRecommendations
               recommendations={recommendations}
               userProfile={userProfile}
               onProductClick={handleProductClick}
+              previousRecommendations={previousRecommendations}
             />
           </div>
 
