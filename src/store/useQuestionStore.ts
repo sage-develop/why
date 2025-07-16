@@ -269,7 +269,26 @@ const useQuestionStore = create<QuestionState>((set, get) => ({
   removeAnswer: (questionId: string) => {
     const { userProfile, recommendations } = get()
 
-    const updatedAnswers = userProfile.answers.filter(a => a.questionId !== questionId)
+    // Find existing answer or create new one with empty selectedOptions
+    const existingAnswerIndex = userProfile.answers.findIndex(a => a.questionId === questionId)
+    let updatedAnswers = [...userProfile.answers]
+
+    if (existingAnswerIndex >= 0) {
+      // Update existing answer to have empty selectedOptions
+      updatedAnswers[existingAnswerIndex] = {
+        ...updatedAnswers[existingAnswerIndex],
+        selectedOptions: [],
+        answeredAt: new Date()
+      }
+    } else {
+      // Create new answer with empty selectedOptions
+      updatedAnswers.push({
+        questionId,
+        selectedOptions: [],
+        answeredAt: new Date()
+      })
+    }
+
     const updatedProfile = {
       ...userProfile,
       answers: updatedAnswers

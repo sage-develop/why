@@ -13,9 +13,9 @@ const AnswerSummary: React.FC<AnswerSummaryProps> = ({ onQuestionSelect, current
   const scrollContainerRef = React.useRef<HTMLDivElement>(null)
   const currentQuestionRef = React.useRef<HTMLDivElement>(null)
 
-  // Show questions that have been visited (including skipped ones)
+  // Show questions that have been visited (including skipped ones) plus the current question
   const visitedQuestions = questions.filter(q =>
-    userProfile.answers.some(a => a.questionId === q.id)
+    userProfile.answers.some(a => a.questionId === q.id) || q.id === currentQuestionId
   )
 
   // Auto-open category when current question changes
@@ -60,7 +60,7 @@ const AnswerSummary: React.FC<AnswerSummaryProps> = ({ onQuestionSelect, current
 
   const getAnswerText = (questionId: string) => {
     const answer = getCurrentAnswer(questionId)
-    if (!answer || answer.selectedOptions.length === 0) return 'Skipped'
+    if (!answer || answer.selectedOptions.length === 0) return 'Not answered'
 
     const question = questions.find(q => q.id === questionId)
     if (!question) return 'Unknown'
@@ -128,7 +128,7 @@ const AnswerSummary: React.FC<AnswerSummaryProps> = ({ onQuestionSelect, current
             // Count answered and total questions in this category
             const answeredInCategory = questions.filter(q => {
               const answer = getCurrentAnswer(q.id)
-              return answer && answer.selectedOptions.length > 0
+              return answer && answer.selectedOptions.length > 0 && q.id !== currentQuestionId
             }).length
 
             return (
@@ -162,21 +162,21 @@ const AnswerSummary: React.FC<AnswerSummaryProps> = ({ onQuestionSelect, current
                     <div className="space-y-2">
                       {questions.map((question) => {
                         const answerText = getAnswerText(question.id)
-                        const isSkipped = answerText === 'Skipped'
+                        const isSkipped = answerText === 'Not answered'
                         const isCurrentQuestion = question.id === currentQuestionId
                         const hasAnswer = userProfile.answers.some(a =>
                           a.questionId === question.id && a.selectedOptions.length > 0
-                        )
+                        ) && question.id !== currentQuestionId
 
                         return (
                           <div
                             key={question.id}
                             ref={isCurrentQuestion ? currentQuestionRef : null}
                             className={`flex items-start justify-between p-3 rounded-lg cursor-pointer transition-colors ${isCurrentQuestion
-                                ? 'bg-blue-50 border border-blue-200'
-                                : hasAnswer
-                                  ? 'bg-green-50 hover:bg-green-100'
-                                  : 'bg-gray-50 hover:bg-gray-100'
+                              ? 'bg-blue-50 border border-blue-200'
+                              : hasAnswer
+                                ? 'bg-green-50 hover:bg-green-100'
+                                : 'bg-gray-50 hover:bg-gray-100'
                               }`}
                             onClick={() => onQuestionSelect(question.id)}
                             role="button"
@@ -195,10 +195,12 @@ const AnswerSummary: React.FC<AnswerSummaryProps> = ({ onQuestionSelect, current
                                 {question.text}
                               </div>
                               <div className={`text-sm mt-1 ${isSkipped
-                                  ? 'text-gray-500 italic'
-                                  : hasAnswer
-                                    ? 'text-green-600'
-                                    : 'text-blue-600'
+                                ? 'text-gray-500 italic'
+                                : hasAnswer
+                                  ? 'text-green-600'
+                                  : isCurrentQuestion
+                                    ? 'text-blue-600'
+                                    : 'text-gray-600'
                                 }`}>
                                 {answerText}
                               </div>

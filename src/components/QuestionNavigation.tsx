@@ -86,7 +86,7 @@ const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
                 </div>
                 {currentAnswer && (
                   <div className="text-xs text-gray-500 mt-1">
-                    Answer: {question.options.find(opt => opt.id === currentAnswer.selectedOptions[0])?.text || 'Skipped'}
+                    Answer: {question.options.find(opt => opt.id === currentAnswer.selectedOptions[0])?.text || 'Not answered'}
                   </div>
                 )}
               </div>
