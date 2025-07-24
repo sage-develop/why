@@ -1,0 +1,33 @@
+# Project Context and Rules
+
+This workspace contains financial product documentation and analysis materials.
+I am a relationship manager with a bank and want to provide
+product recommendations to my clients.
+
+## Key Files and Context:
+- Contains product documentation in the `products/` directory
+
+## Important Files to Always Consider:
+- README.md: ignore this file
+- questions.md: ignore this file
+- products/: Product documentation
+- when there are multiple versions of a file, use only the most
+  recent version
+
+## Coding Guidelines:
+- Follow consistent markdown formatting
+- Maintain clear documentation structure
+- Use proper headings and organization
+
+## Diagrams
+- Use Mermaid to create charts where applicable
+- choose colours that have good contrast
+
+## Always Consider:
+- The financial context when making suggestions
+- Malaysian regulatory requirements where applicable
+- Professional documentation standards
+
+## To include specific file content:
+# You can add direct content here that should always be considered
+# For example, if you have key project requirements or standards
