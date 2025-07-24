@@ -1,10 +1,10 @@
-# Insurance
+# Insurance Products
 
-*This section is currently under development. Insurance products will be added to this catalog in future versions.*
+*This section is currently under development. Insurance products will be added to this catalog in future updates.*
 
-## Product Categories
+## Coming Soon
 - Trade Credit Insurance
-- Life Insurance
-- Property Insurance
-- Liability Insurance
-- Other Risk Management Products 
+- Political Risk Insurance
+- Marine Insurance
+- Performance Bonds
+- Other Insurance Products 
