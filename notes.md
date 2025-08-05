@@ -2,7 +2,7 @@
 The following are some of the information we want to know about
 the client:
 
-### 1. Type of business
+### <span style="color: rgb(59, 130, 246)">1. Type of business</span>
 **Why it matters:** Different business types have distinct financial needs, risk profiles, and growth patterns that require tailored banking solutions.
 
 #### **1.1 Manufacturing & Production**
@@ -66,7 +66,7 @@ the client:
   - Expansion plans (geographic, product, market)
   - Digital transformation initiatives and technology adoption
 
-### 2. Industry
+### <span style="color: rgb(59, 130, 246)">2. Industry</span>
 **Why it matters:** Industry-specific regulations, market cycles, risk factors, and growth patterns drive tailored product needs and risk assessments.
 
 #### **2.1 Technology & Innovation**
@@ -171,7 +171,7 @@ the client:
   - International expansion opportunities and challenges
   - M&A activity and consolidation trends
 
-### 3. Size of business
+### <span style="color: rgb(59, 130, 246)">3. Size of business</span>
 **Why it matters:** Determines appropriate product complexity, pricing, service level, and decision-making processes.
 
 #### **3.1 Enterprise & Large Corporate**
@@ -285,7 +285,7 @@ the client:
   - Service level expectations and preferences
   - Risk tolerance and regulatory requirements
 
-### 4. Coverage of business
+### <span style="color: rgb(59, 130, 246)">4. Coverage of business</span>
 **Why it matters:** Determines need for international banking services and foreign exchange solutions.
 - **Domestic only:** Local currency solutions, domestic payment systems, local regulatory compliance
 - **Cross-border:** FX hedging, trade finance, correspondent banking, multi-currency accounts
@@ -298,7 +298,7 @@ the client:
 - Regulatory restrictions on international operations
 - Currency exposure and hedging practices
 
-### 5. Trading terms (i.e. credit terms, how many days)
+### <span style="color: rgb(59, 130, 246)">5. Trading terms</span>
 **Why it matters:** Impacts working capital needs and appropriate financing solutions.
 - **Extended credit terms (60-90+ days):** Higher working capital financing needs, receivables financing
 - **Cash on delivery:** Lower financing needs, focus on operational efficiency
@@ -311,7 +311,7 @@ the client:
 - Payment methods preferred by customers
 - Credit control processes and bad debt experience
 
-### 6. Trading currencies
+### <span style="color: rgb(59, 130, 246)">6. Trading currencies</span>
 **Why it matters:** Determines foreign exchange risk exposure and hedging requirements.
 - **Single currency:** Minimal FX risk, focus on domestic solutions
 - **Multiple currencies:** FX hedging products, multi-currency accounts, natural hedging opportunities
@@ -324,7 +324,7 @@ the client:
 - FX risk tolerance and management sophistication
 - Future currency exposure plans
 
-### 7. Cash flow position, ie. dependent on credit working capital financing?
+### <span style="color: rgb(59, 130, 246)">7. Cash flow position</span>
 **Why it matters:** Determines financing needs and appropriate credit facilities.
 - **Cash generative:** Investment products, surplus cash management, expansion financing
 - **Working capital dependent:** Revolving credit facilities, supply chain financing, factoring
@@ -337,7 +337,7 @@ the client:
 - Cash management practices and treasury function maturity
 - Investment of surplus cash practices
 
-### 8. Capex frequencies?
+### <span style="color: rgb(59, 130, 246)">8. Capex frequency</span>
 **Why it matters:** Determines need for term financing and equipment financing solutions.
 - **Regular capex:** Equipment financing, lease solutions, technology upgrade financing
 - **Lumpy capex:** Project financing, term loans, development financing
