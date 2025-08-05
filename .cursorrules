@@ -1,8 +1,23 @@
 # Project Context and Rules
 
-This workspace contains financial product documentation and analysis materials.
+
+## Objective
 I am a relationship manager with a bank and want to provide
 product recommendations to my clients.
+
+## The Bank and clients
+- I work for a regional bank operating in South-East Asia
+- The bank has access to all financial products available in all
+  parts of the world
+- Where appropriate, show currencies in USD terms
+- The clients are all companies
+- The clients could range from the largest companies to the
+  smallest sole-proprietorships.
+- Assume that I am siting down with a senior person within the client
+  company (e.g. CFO). Help me ask him questions so that I can recommend
+  him products that we offer
+- The bank will support all the major currencies and the South-East Asian
+  currencies
 
 ## Key Files and Context:
 - Contains product documentation in the `products/` directory
@@ -25,9 +40,4 @@ product recommendations to my clients.
 
 ## Always Consider:
 - The financial context when making suggestions
-- Malaysian regulatory requirements where applicable
 - Professional documentation standards
-
-## To include specific file content:
-# You can add direct content here that should always be considered
-# For example, if you have key project requirements or standards
