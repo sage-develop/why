@@ -41,9 +41,11 @@ flowchart TD
     D2b2 -->|Repay Bank Directly / Pay Third Party Supplier / Simplify Payment Routing| D5[Assignment of Proceeds under Letter of Credit]
     D2b1 -->|No| D3{Pre-Shipment Financing Needed?}
     D5 --> D3
-    D2b -->|Acts as Middleman| D2b3{Is LC Transferable?}
-    D2b3 -->|Yes, LC is Transferable| D6[Letter of Credit Transferring]
-    D2b3 -->|No, LC Not Transferable| D2b1{Need Payment Redirection?}
+    D2b -->|Acts as Middleman| D2b3{Want to Transfer LC to Supplier?}
+    D2b3 -->|Yes| D2b4{Is LC Transferable?}
+    D2b4 -->|Yes, LC is Transferable| D6[Letter of Credit Transferring]
+    D2b4 -->|No, LC Not Transferable| D2b1{Need Payment Redirection?}
+    D2b3 -->|No| D2b1{Need Payment Redirection?}
 
     D3 -->|Yes| D3a{Need Working Capital for Raw Materials/Production/Packaging/Shipment?}
     D3a -->|Yes| D7[Packing Credit for Exporters]

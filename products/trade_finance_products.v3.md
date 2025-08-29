@@ -8,61 +8,74 @@
 
 This is a pre-shipment service for Sellers
 
+- Advising is the standard process to receive the LC through the seller’s bank.
 - Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
-- The base step is to receive the LC through their bank.
-- The advising bank verifies the LC's authenticity via secure channels before passing it to the seller.
-- Use when the seller wants to avoid incorrect LC details.
-- Use every time an LC is amended, so the exporter understands new terms and timelines.
-- If not used, the exporter risks preparing incorrect documents, missing deadlines, or relying on fraudulent LC information which can result in payment delays or rejection.
-- If the client wants to use other LC products.
+- To receive the LC through their bank, the seller uses advising.
+- The advising bank verifies the LC’s authenticity via secure channels before passing it to the seller.
+- Use when the seller wants assurance that the LC received is genuine and terms are accurate.
+- Use when the seller wants to confirm authenticity of the LC
+- Use when an LC is amended and the seller needs to understand new terms, conditions, or timelines.
+- Required as the first step before accessing other LC products such as Confirmation, or Trust Receipt Loan.
+- If not used, the seller risks acting on fraudulent or incorrect LC details, preparing non-compliant documents, missing deadlines, and facing payment delays or rejection.
+- If not used, the seller cannot select other LC product
 
 #### 3. Letter of Credit Confirmation
 
 This is a pre-shipment service for sellers
 
-- The confirmation is added at the time the LC is issued/advised
-- LC Confirmation is an add-on to Advising: the seller's bank adds its own guarantee of payment on top of the issuing bank's LC.
-- Applicable to both domestic and international cases
+- Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
+- Confirmation can only be added after Advising.
+- LC Confirmation is an add-on to Advising: the seller’s bank adds its own guarantee of payment on top of the issuing bank’s LC.
+- LC Confirmation increases cost because the seller’s bank takes on additional risk.
+- Use when the seller values security of payment over cost savings.
+- Applicable to both domestic and international trade.
+- In domestic trade, use when the seller doesn’t trust buyer’s bank and wants to transfer the risk to their own bank
+- In international trade, use when the seller wants to transfer foreign or cross-border risk to their local bank.
 - Use when trading with new buyers, unfamiliar partners, or higher-risk countries.
-- The seller wants to transfer foreign/cross-border risk to their local bank instead of bearing it themselves.
-- The seller prefers to rely on a domestic/local bank guarantee.
+- Use when the seller prefers to rely on a domestic/local bank guarantee instead of the issuing bank alone.
+- If not used, the seller bears all issuing bank and country risk.
+- If not used, in high-risk environments, this could mean non-payment even if documents are compliant.
+- After selecting this product, the seller can also continue to choose others.
 
 #### 4. Assignment of Proceeds under Letter of Credit
 
 This is pre-shipment service for sellers
 
-- Only available with LC transactions
-- Assignment of proceeds is not a transferable LC
-- Only pass on the right to receive money under the LC. The seller remains responsible for fulfilling all LC terms and presenting compliant documents.
+- Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
+- Assignment can be done whether or not the LC is transferable.
+- Assignment only passes on the right to receive money under the LC; the seller still must fulfill all LC terms and present compliant documents.
 - Use when the seller does not want LC proceeds to be paid directly to themselves.
 - Use when the seller wants to redirect or simplify payments to third parties involved in fulfilling the order.
-- Use when the seller wants to repay the bank directly from LC proceeds
+- Use when the seller wants to repay the bank directly from LC proceeds.
+- If not used, the seller must receive payment directly and then handle onward payments manually
+- After selecting this product, the seller can also continue to choose others.
 
 #### 5. Letter of Credit Transferring
 
-For the Seller or trading company that acts as a middleman and doesn't actually make the goods — they must buy them from a Supplier (Exporter).
+For the Seller or trading company that acts as a middleman and doesn't actually make the goods.
 
-- Sellers don't need to use their own cash to pay Supplier upfront.
-- The supplier still gets the safety of an LC — but indirectly.
-- Sellers earn their margin by marking up the invoice.
-- The supplier handles documents through the bank
-- The LC guarantees payment to the seller via the buyer's bank
-- The LC is transferred to the supplier, usually for a smaller amount
-- The supplier ships goods directly to the Buyer (not to the Seller).
-- The transferable LC ensures the Supplier is paid directly, while the Seller controls the deal and earns the profit margin
+- For the sellers or trading company that acts as a middleman and doesn’t actually make the goods.
+- Use when the buyer and seller agree to settle trade using a transferable Letter of Credit.
+- If the LC is not transferable, the seller cannot use this product.
+- Sellers do not need to use their own cash to pay the supplier upfront.
+- Use when the seller wants to secure a profit margin by transferring a smaller amount to the supplier.
+- Use when the seller is a middleman who does not manufacture or ship goods themselves, but wants to control the trade flow.
+- If not used, the seller must use alternatives such as Assignment of Proceeds or pay the supplier directly.
 
 #### 16. Packing Credit for Exporters
 
 This is a pre-shipment loan for sellers
 
 - This product is widely used as short-term working capital.
-- A loan that gives sellers money upfront to prepare and ship goods.
+- Provides sellers a loan upfront to prepare and ship goods.
+- The loan is repaid once the seller receives payment for the goods.
 - The bank takes the LC, purchase order, or collection bill as security.
-- The seller repays once payment for the goods is received.
-- The seller needs working capital to: Buy raw materials, cover production costs, pay for packaging and shipment.
-- Useful for large orders, urgent shipments, or when the exporter's own cash flow is insufficient.
+- Use when the seller needs working capital to buy raw materials, cover production costs, packaging, or shipment.
+- Use for large orders, urgent shipments, or when the exporter’s cash flow is insufficient.
+- Helps sellers accept new orders without waiting for payment on old ones.
 - Provides flexibility to accept new export orders without waiting for old ones to be paid.
-- Packing Credit requires strong collateral/security that's why it's not compatible with OA.
+- Packing Credit requires strong collateral/security.
+- After selecting this product, the seller can continue to use other LC products, including post-shipment options.
 
 ### Sellers - Post-shipment
 
