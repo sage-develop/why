@@ -68,7 +68,7 @@ This is a pre-shipment loan for sellers
 - This product is widely used as short-term working capital.
 - Provides sellers a loan upfront to prepare and ship goods.
 - The loan is repaid once the seller receives payment for the goods.
-- The bank takes the LC, purchase order, or collection bill as security.
+- The bank takes the LC as security.
 - Use when the seller needs working capital to buy raw materials, cover production costs, packaging, or shipment.
 - Use for large orders, urgent shipments, or when the exporter’s cash flow is insufficient.
 - Helps sellers accept new orders without waiting for payment on old ones.
