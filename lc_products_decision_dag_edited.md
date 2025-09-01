@@ -17,12 +17,17 @@ flowchart TD
     C --> C2[Letter of Credit Issuance/Amendment]
     C2 --> C2a{Goods at Carrier, B/L Issued to Seller?}
     C2a -->|Yes| C2b{Who Has Title to Goods?}
-    C2b -->|Bank Has Title via B/L| C2b1{What is Buyer's Need?}
-    C2b1 -->|Access to Goods Now, Will Repay Later| C4[Trust Receipt Loan under Letter of Credit]
-    C2b1 -->|No Financing Needed| C4a[Direct Settlement]
-    C2b -->|Buyer Has Title via B/L| C2b2{What is Buyer's Need?}
-    C2b2 -->|Funds to Pay Bank and Obtain Documents| C5[P/N under Letter of Credit Buyer]
-    C2b2 -->|No Financing Needed| C5a[Direct Settlement]
+    C2b -->|Bank Has Title via B/L| C2b1{Has B/L Already Arrived at Buyer?}
+    C2b1 -->|No| C6[Shipping Guarantee Issuance]
+    C2b1 -->|Yes| C2b1a{Is Financing Needed?}
+    C2b1a -->|Yes| C4[Trust Receipt Loan under Letter of Credit]
+    C4 --> C7[Endorsement Services]
+    C2b1a -->|No| C7[Endorsement Services]
+    C2b -->|Buyer Has Title via B/L| C2b2{Has B/L Already Arrived at Buyer?}
+    C2b2 -->|No| C8[Shipping Guarantee Issuance]
+    C2b2 -->|Yes| C2b2a{Is Financing Needed?}
+    C2b2a -->|Yes| C5[P/N under Letter of Credit Buyer]
+    C2b2a -->|No| C5a[Direct Settlement]
     C2a -->|No| C2c[Wait for Goods to Reach Carrier and B/L to be Issued]
     C2c --> C2a
 
@@ -64,7 +69,7 @@ flowchart TD
     classDef financing fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef service fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
 
-    class C2,D2,D9,D10,C4,C5,D7,D10a,D4,D5,D6 coreProduct
+    class C2,D2,D9,D10,C4,C5,D7,D10a,D4,D5,D6,C6,C7,C8 coreProduct
 ```
 
 ## Product Categories
@@ -75,10 +80,12 @@ flowchart TD
 
 - **Letter of Credit Issuance/Amendment** - Base LC product for buyers
 
-#### Post-Shipment Financing
+#### Post-Shipment Services & Financing
 
 - **Trust Receipt Loan under Letter of Credit** - Buyer financing when bank has title to goods
 - **P/N under Letter of Credit Buyer** - Buyer financing when buyer has title to goods
+- **Shipping Guarantee Issuance** - Service when goods arrive before B/L is available
+- **Endorsement Services** - Service to transfer ownership from bank to buyer
 
 ### Seller Products
 

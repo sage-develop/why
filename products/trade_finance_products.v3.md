@@ -84,8 +84,10 @@ This is a pre-shipment loan for sellers
 This is a post-shipment service/loan for sellers
 
 - Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
-- A service for sellers to show all documents for LC to the bank in order to receive payment.
-- A loan for sellers when the seller wants to receive payment immediately under a Sight LC.
+- A service for sellers to submit compliant LC documents to their bank in order to receive payment.
+- The loan is used when the seller wants immediate payment under a Sight LC (the bank advances funds once documents are compliant)
+- Use when the seller does not want to wait for the buyer’s bank or buyer’s payment.
+- Provides advanced financing by selling the documents at a discount to the bank.
 
 #### 9. Bill Receivable under Letter of Credit
 
@@ -127,15 +129,35 @@ This is financing for buyers.
 This is financing for buyers.
 
 - Use when the bank owns the goods at first (through the Bill of Lading, which is both a transport document and a document of title) so that the buyer's bank can release the goods to the buyer in trust.
+- Use when the buyer needs goods ownership transfer from the buyer's bank in order to get the goods.
 - The buyer needs the goods immediately to continue operations, sell to customers, or generate cash flow.
 - The buyer does not have enough cash at the time of goods arrival but can repay once goods are sold.
 - The buyer's business model depends on selling goods first to finance repayment.
 - The buyer wants to extend credit terms beyond what the LC provides.
+- The B/L needs to arrive at the buyer's before using this product.
 
 #### 18. Shipping Guarantee Issuance
 
 This is a service for buyers.
 
-#### 19. Delivery Order Endorsement
+- Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
+- The B/L can be under the buyer’s bank or the buyer’s name in order to use Shipping Guarantee.
+- Use when the buyer wants access to the goods.
+- Use when goods arrive at the port before the original Bill of Lading (B/L) is available.
+- The buyer needs the goods immediately to avoid demurrage charges or supply chain delays.
+- The buyer’s bank issues a guarantee to the shipping company so the goods can be released without presenting the B/L.
+- The buyer must provide indemnity to their bank and pay fees until the original B/L is returned.
+- If not used, the buyer cannot take delivery until the original B/L arrives, which may cause delays and extra costs.
+- When the original B/L arrives and it is under the buyer’s name, the buyer submits it to their bank in exchange for the Shipping Guarantee.
+- If the original B/L arrives under the buyer’s bank’s name, the buyer must also use Endorsement Services.
+
+#### 19. Endorsement Services
 
 This is a service for buyers.
+
+- Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
+- Use when the Bill of Lading (B/L) is issued under the buyer’s bank’s name.
+- The service transfers ownership of the goods from the buyer’s bank to the buyer.
+- Without endorsement, the buyer cannot take delivery because the B/L is not in their name.
+- The B/L needs to arrive at the buyer's before using this product.
+- If the buyer needs the goods immediately but does not have cash to pay at the time, this product can be used with Trust Receipt Loan under Letter of Credit
