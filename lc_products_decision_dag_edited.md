@@ -55,12 +55,11 @@ flowchart TD
     D3 -->|Yes| D3a{Need Working Capital for Raw Materials/Production/Packaging/Shipment?}
     D3a -->|Yes| D7[Packing Credit for Exporters]
     D7 --> D2d{Post-Shipment Services/Loans?}
-    D3 -->|No| D2d{Post-Shipment Services/Loans?}
+    D3 -->|No| D8{Payment Terms?}
 
     D2d -->|Yes| D8{Payment Terms?}
     D8 -->|Sight LC| D9[Export Bill under Letter of Credit]
-    D8 -->|Usance LC| D10[Export Bill under Letter of Credit]
-    D10 --> D8b{Need Working Capital Before Maturity?}
+    D8 -->|Usance LC| D8b{Need Working Capital Before Maturity?}
     D8b -->|Yes| D10a[Bill Receivable under Letter of Credit]
     D8b -->|No| D10b[Wait for Maturity Payment]
 

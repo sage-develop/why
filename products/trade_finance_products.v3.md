@@ -12,11 +12,10 @@ This is a pre-shipment service for Sellers
 - Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
 - To receive the LC through their bank, the seller uses advising.
 - The advising bank verifies the LC’s authenticity via secure channels before passing it to the seller.
-- Use when the seller wants assurance that the LC received is genuine and terms are accurate.
-- Use when the seller wants to confirm authenticity of the LC
+- Use when the seller wants to confirm authenticity of the LC and to assure that the LC terms received are accurate.
 - Use when an LC is amended and the seller needs to understand new terms, conditions, or timelines.
 - Required as the first step before accessing other LC products such as Confirmation, or Trust Receipt Loan.
-- If not used, the seller risks acting on fraudulent or incorrect LC details, preparing non-compliant documents, missing deadlines, and facing payment delays or rejection.
+- If not used, the seller risks acting on fraudulent or incorrect LC details, missing deadlines, and facing payment delays or rejection.
 - If not used, the seller cannot select other LC product
 
 #### 3. Letter of Credit Confirmation
@@ -81,22 +80,26 @@ This is a pre-shipment loan for sellers
 
 #### 8. Export Bill under Letter of Credit
 
-This is a post-shipment service/loan for sellers
+This is a post-shipment service for sellers
 
 - Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
-- A service for sellers to submit compliant LC documents to their bank in order to receive payment.
-- The loan is used when the seller wants immediate payment under a Sight LC (the bank advances funds once documents are compliant)
+- Use when the buyer and seller agreed on Sight LC
+- Loan type: advance/negotiation under Sight LC.
+- The loan is used when the seller wants immediate payment under a Sight LC (the seller's bank advances funds once documents are compliant)
 - Use when the seller does not want to wait for the buyer’s bank or buyer’s payment.
-- Provides advanced financing by selling the documents at a discount to the bank.
 
 #### 9. Bill Receivable under Letter of Credit
 
 This is a post-shipment loan for sellers
 
+- Use when the buyer and seller agreed on Usance LC
+- The seller needs financing immediately after presenting documents under a Usance LC.
+- Loan type: discounting under Usance LC.
 - Use when the seller ships goods under an LC but payment will only come after a credit period (usance LC).
 - Use when the seller does not want to wait months for the LC maturity to get paid.
 - Use when the seller needs working capital after shipment while waiting for the buyer's bank to pay at maturity.
 - Use when the seller prefers to finance later (post-shipment), rather than arranging pre-shipment finance.
+- If not used, the seller must wait until the LC maturity date to receive payment.
 
 ### Buyers - Pre-shipment
 
@@ -109,7 +112,7 @@ This is a pre-shipment service for Buyers
 - Use when the exporter requires a bank-backed guarantee of payment before shipping.
 - Use when trading with unfamiliar partners or in higher-risk markets.
 - Use when the transaction involves a large deal size and the seller demands stronger assurance of payment.
-- If the client wants to use other LC products.
+- If not used, the seller cannot select other LC product.
 
 #### 6. P/N under Letter of Credit (Buyer)
 
