@@ -119,13 +119,13 @@ This is a pre-shipment service for Buyers
 This is financing for buyers.
 
 - Available for international and domestic.
-- Use when the Bill of Lading (B/L) is issued in the buyer's name, so technically the goods already belong to the buyer.
+- Use when the Bill of Lading (B/L) is issued in the buyer's name, technically the goods already belong to the buyer.
 - The bank receives the B/L but cannot control the goods because ownership is already in the buyer's name.
 - To get the B/L released, the buyer signs a Promissory Note (P/N) — a written promise to repay the bank later.
 - Once the P/N is signed, the bank releases the B/L to the buyer then the buyer collects the goods from the shipping company.
-- The buyer wants to free up cash flow instead of paying upfront at sight.
-- The buyer needs goods on hand to sell first and repay later.
-- The buyer is trading domestically but still wants short-term financing against documents.
+- Use when the buyer wants to free up cash flow instead of paying upfront at sight.
+- Use when the buyer needs goods on hand to sell first and repay later.
+- Use when the buyer is trading domestically but still wants short-term financing against documents.
 
 #### 7. Trust Receipt Loan under Letter of Credit
 
@@ -145,8 +145,7 @@ This is a service for buyers.
 
 - Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
 - The B/L can be under the buyer’s bank or the buyer’s name in order to use Shipping Guarantee.
-- Use when the buyer wants access to the goods.
-- Use when goods arrive at the port before the original Bill of Lading (B/L) is available.
+- Use when the buyer wants access to the goods but tge buyer has not received the B/L yet.
 - The buyer needs the goods immediately to avoid demurrage charges or supply chain delays.
 - The buyer’s bank issues a guarantee to the shipping company so the goods can be released without presenting the B/L.
 - The buyer must provide indemnity to their bank and pay fees until the original B/L is returned.
@@ -162,5 +161,5 @@ This is a service for buyers.
 - Use when the Bill of Lading (B/L) is issued under the buyer’s bank’s name.
 - The service transfers ownership of the goods from the buyer’s bank to the buyer.
 - Without endorsement, the buyer cannot take delivery because the B/L is not in their name.
-- The B/L needs to arrive at the buyer's before using this product.
+- The buyer needs to receive the B/L before using this product.
 - If the buyer needs the goods immediately but does not have cash to pay at the time, this product can be used with Trust Receipt Loan under Letter of Credit
