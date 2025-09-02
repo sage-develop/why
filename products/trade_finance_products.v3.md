@@ -145,7 +145,7 @@ This is a service for buyers.
 
 - Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
 - The B/L can be under the buyer’s bank or the buyer’s name in order to use Shipping Guarantee.
-- Use when the buyer wants access to the goods but tge buyer has not received the B/L yet.
+- Use when the buyer wants access to the goods but the buyer has not received the B/L yet.
 - The buyer needs the goods immediately to avoid demurrage charges or supply chain delays.
 - The buyer’s bank issues a guarantee to the shipping company so the goods can be released without presenting the B/L.
 - The buyer must provide indemnity to their bank and pay fees until the original B/L is returned.
