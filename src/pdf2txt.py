@@ -36,7 +36,7 @@ def extract_text_from_pdf(pdf_path: str, output_path: str | None = None) -> str:
 
         # Save to file if output path is provided
         if output_path:
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 f.write(text)
             print(f"Text extracted and saved to: {output_path}")
 
@@ -50,7 +50,9 @@ def extract_text_from_pdf(pdf_path: str, output_path: str | None = None) -> str:
 def main():
     parser = argparse.ArgumentParser(description="Extract text from PDF files")
     parser.add_argument("input_pdf", help="Path to the input PDF file")
-    parser.add_argument("output_txt", nargs='?', help="Path to save the extracted text (optional)")
+    parser.add_argument(
+        "output_txt", nargs="?", help="Path to save the extracted text (optional)"
+    )
 
     args = parser.parse_args()
 
@@ -63,7 +65,7 @@ def main():
     output_path = args.output_txt
     if not output_path:
         input_path = Path(args.input_pdf)
-        output_path = str(input_path.with_suffix('.txt'))
+        output_path = str(input_path.with_suffix(".txt"))
 
     # Extract text
     text = extract_text_from_pdf(args.input_pdf, output_path)
