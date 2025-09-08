@@ -109,12 +109,11 @@ This is a pre-shipment service for Buyers
 This is financing for buyers.
 
 - Can be used only if the original B/L is already at the buyer's bank.
-- The **B/L also needs to be issued under the buyer's name**.
 - Must determine if the buyer is using **Sight LC or Usance LC**.
 - If the buyer is using Sight LC, separately calculate the financing gap using the Sight LC formula.
 - If the buyer is using Usance LC, separately calculate the financing gap using the Usance LC formula.
 - Determine if the buyer needs financing from the financing gap result.
-- If financing is needed, use P/N under Letter of Credit (Buyer).
+- If financing is needed, and the **origianl B/L is issued under the buyer's name**. use P/N under Letter of Credit (Buyer).
 - If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to complete the flow.
 
 #### 7. Trust Receipt Loan under Letter of Credit
@@ -122,12 +121,11 @@ This is financing for buyers.
 This is financing for buyers.
 
 - Can be used only if the original B/L is already at the buyer's bank.
-- The **original B/L also needs to be issued under the buyer's bank's name**.
 - Must determine if the buyer is using **Sight LC or Usance LC**.
 - If the buyer is using Sight LC, separately calculate the financing gap using the Sight LC formula.
 - If the buyer is using Usance LC, separately calculate the financing gap using the Usance LC formula.
 - Determine if the buyer needs financing from the financing gap result.
-- If financing is needed, use Trust Receipt Loan under Letter of Credit.
+- If financing is needed, and the **original B/L is issued under the buyer's bank's name**, use Trust Receipt Loan under Letter of Credit.
 - After using Trust Receipt Loan under Letter of Credit, the buyer still needs to transfer goods ownership to themselves using Endorsement Services.
 - If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to complete the flow.
 
@@ -136,11 +134,12 @@ This is financing for buyers.
 This is a service for buyers.
 
 - Use when **the buyer's bank haven't yet received the original B/L**.
+- Use if **the buyer wants to claims the goods immediately**.
 - The buyer uses Shipping Guarantee to claim the goods immediately (not after exchange B/L with the Shipping Guarantee).
-- When the original B/L has arrived, continue the flow checking whose name the B/L is issued in.
+- When the original B/L has arrived, continue the base flow checking which LC type is the buyer using, Sight LC or Usance LC.
 - Using Shipping Guarantee Issuance will affect the end of all other products' flow.
-- If a Shipping Guarantee is issued in the buyer’s name, use it to exchange for the Shipping Guarantee.
-- If a Shipping Guarantee is issued in the buyer’s bank’s name, the buyer must also use Endorsement Services.
+- In other product's flow, if a Shipping Guarantee is issued in the buyer’s name, use it to exchange for the Shipping Guarantee.
+- In other product's flow, if a Shipping Guarantee is issued in the buyer’s bank’s name, the buyer must also use Endorsement Services.
 
 #### 19. Endorsement Services
 
@@ -153,11 +152,11 @@ This is a service for buyers.
 - Can be combined with a Trust Receipt Loan under Letter of Credit if the buyer needs the goods immediately but does not have the cash to pay upfront.
 
 <!-- LC Buyer Pre-shipment Prompt
-- Please make a new decision diagram for buyer preshipment product @trade_finance_products.v3.md
-- Consider every single the bullet points below each product
+- Make a new decision diagram for buyer preshipment product @trade_finance_products.v3.md.
+- Consider every single the bullet points below each product.
 - The highlighted sentences must be a decision point.
-- If its the end of the flow, add a sentence to conclude the flow
-- If the buyer can continue choosing other product continue the flow
-- Only the product will be inside the colored box (all same color) any box that doesn't say product's name will have no color
-- The buyer is already using LC payment method
-- Combine duplicated decision points if possible -->
+- If its the end of the flow, add a sentence to conclude the flow.
+- If the buyer can continue choosing other product continue the flow.
+- Only the product will be inside the colored box (all same color) any box that doesn't say product's name will have no color.
+- The buyer is already using LC payment method.
+- Combine duplicated decision points where possible.
