@@ -15,9 +15,9 @@ This is a pre-shipment service for Sellers
 
 This is a pre-shipment service for sellers
 
-- First, check if the seller is using a Domestic or International transaction.
-- If the seller is doing Domestic transaction, are they worried about a **counterparty risk**, if yes, the seller can use Letter of Credit Confirmation.
-- If the seller is doing International transaction, are they worried about a **counterparty sovereign risk**, if yes, the seller can use Letter of Credit Confirmation.
+- First, check if the seller is using a **Domestic or International transaction**.
+- If they are worried about a **counterparty risk or counterparty sovereign risk**, the seller can use Letter of Credit Confirmation.
+<!-- - If the seller is doing International transaction, are they worried about a **counterparty sovereign risk**, if yes, the seller can use Letter of Credit Confirmation. -->
 - If the seller has no concern about the counter party risk or counter party sovereign risk, the seller can continue to choose other products.
 
 #### 4. Assignment of Proceeds under Letter of Credit
@@ -32,7 +32,10 @@ This is pre-shipment service for sellers
 For the Seller or trading company that acts as a **middleman** and doesn't actually make the goods.
 
 - Only available if the LC is transferrable.
-- If the LC is not transferrable, the seller can consider using Assignment of Proceeds under Letter of Credit instead or pay the supplier directly.
+- If the LC is transferrable and the seller wants to transfer the LC to the supplier, the seller can use Letter of Credit Transferring.
+- If the LC is not transferrable or don't want to transfer LC, but want to assign proceeds to other, the seller can consider using Assignment of Proceeds under Letter of Credit, if not, pay the supplier directly.
+<!--
+the seller can consider using Assignment of Proceeds under Letter of Credit instead or pay the supplier directly. -->
 - Suitable for middlemen who do not manufacture or ship goods but want to manage the trade flow and maintain control.
 - If the seller is a middleman and chooses this product, the flow ends here.
 

@@ -1,61 +1,70 @@
+# Trade Payment Methods - Initial Decision Tree
+
+## Overview
+
+This is the initial decision flow for determining which trade payment method and related services a client needs. It starts with identifying if the client knows their preferred payment method and then routes them to the appropriate specialized decision diagrams.
+
+## Decision Flow
+
 ```mermaid
-graph TD
-A["Trade Payment Methods"] --> B["Letter of Credit"]
-A --> C["Collection"]
-A --> D["Open Account"]
+flowchart TD
+    Start([Trade Payment Methods]) --> Know{"Does client know what<br>payment method to use?"}
 
-    B --> E["LC Seller"]
-    B --> F["LC Buyer"]
+    Know -->|No| PaymentDecision[Trade Payment Methods<br>Decision Diagram]
+    Know -->|Yes| Which{"Which payment method<br>do you want to use?"}
 
-    C --> G["Collection Seller"]
-    C --> H["Collection Buyer"]
+    Which -->|Letter of Credit| LC_Split{What is the client's role in transaction?}
+    Which -->|Trade Collection| TC_Split{What is the client's role in transaction?}
+    Which -->|Open Account| OA_Split{What is the client's role in transaction?}
 
-    D --> I["Open Account Seller"]
-    D --> J["Open Account Buyer"]
+    LC_Split -->|Seller/Exporter| LC_Seller_Split{When do you need<br>financing/services?}
+    LC_Split -->|Buyer/Importer| LC_Buyer[Full LC Buyer Decision Diagram]
 
-    E --> E1["LC Pre-Shipment"]
-    E --> E2["LC Post-Shipment"]
+    TC_Split -->|Seller/Exporter| TC_Seller_Split{When do you need<br>financing/services?}
+    TC_Split -->|Buyer/Importer| TC_Buyer[Full Trade Collection<br>Buyer Decision Diagram]
 
-    G --> G1["Collection Pre-Shipment"]
-    G --> G2["Collection Post-Shipment"]
+    OA_Split -->|Seller/Exporter| OA_Seller_Split{When do you need<br>financing/services?}
+    OA_Split -->|Buyer/Importer| OA_Buyer[Full Open Account<br>Buyer Decision Diagram]
 
-    I --> I1["Open Account Pre-Shipment"]
-    I --> I2["Open Account Post-Shipment"]
+    LC_Seller_Split -->|Pre-shipment| LC_Seller_Pre[LC Seller Pre-shipment<br>Decision Diagram]
+    LC_Seller_Split -->|Post-shipment| LC_Seller_Post[LC Seller Post-shipment<br>Decision Diagram]
 
-    F --> L["Full LC Buyer Diagram"]
-    H --> N["Full Collection Buyer Diagram"]
-    J --> P["Full Open Account Buyer Diagram"]
+    TC_Seller_Split -->|Pre-shipment| TC_Seller_Pre[Trade Collection Seller<br>Pre-shipment Decision Diagram]
+    TC_Seller_Split -->|Post-shipment| TC_Seller_Post[Trade Collection Seller<br>Post-shipment Decision Diagram]
 
-    E1 --> K1["LC Pre-Shipment Seller Diagram"]
-    E2 --> K2["LC Post-Shipment Seller Diagram"]
-    G1 --> M1["Collection Pre-Shipment Seller Diagram"]
-    G2 --> M2["Collection Post-Shipment Seller Diagram"]
-    I1 --> O1["Open Account Pre-Shipment Seller Diagram"]
-    I2 --> O2["Open Account Post-Shipment Seller Diagram"]
+    OA_Seller_Split -->|Pre-shipment| OA_Seller_Pre[Open Account Seller<br>Pre-shipment Decision Diagram]
+    OA_Seller_Split -->|Post-shipment| OA_Seller_Post[Open Account Seller<br>Post-shipment Decision Diagram]
 
-    style A fill:#e1f5fe
-    style B fill:#f3e5f5
-    style C fill:#e8f5e8
-    style D fill:#fff3e0
-    style E fill:#fce4ec
-    style F fill:#fce4ec
-    style G fill:#e0f2f1
-    style H fill:#e0f2f1
-    style I fill:#fff8e1
-    style J fill:#fff8e1
-    style E1 fill:#f8bbd9
-    style E2 fill:#f48fb1
-    style G1 fill:#c8e6c9
-    style G2 fill:#a5d6a7
-    style I1 fill:#fff59d
-    style I2 fill:#ffee58
-    style L fill:#ffebee
-    style N fill:#e8f5e8
-    style P fill:#fffde7
-    style K1 fill:#ffcdd2
-    style K2 fill:#ef9a9a
-    style M1 fill:#dcedc8
-    style M2 fill:#c5e1a5
-    style O1 fill:#fff9c4
-    style O2 fill:#f0f4c3
+    %% Styling for white boxes
+    classDef default fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+    classDef decision fill:#ffffff,stroke:#666,stroke-width:2px,color:#000
+    classDef endpoint fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+
+    class Start,PaymentDecision,LC_Buyer,TC_Buyer,OA_Buyer,LC_Seller_Pre,LC_Seller_Post,TC_Seller_Pre,TC_Seller_Post,OA_Seller_Pre,OA_Seller_Post endpoint
+    class Know,Which,LC_Split,TC_Split,OA_Split,LC_Seller_Split,TC_Seller_Split,OA_Seller_Split decision
 ```
+
+## Decision Logic
+
+### Primary Flow:
+
+1. **Initial Assessment**: Determine if client has already identified their preferred payment method
+2. **Method Selection**: For clients who know their preference, identify the specific payment method
+3. **Role Identification**: Establish whether client is a seller/exporter or buyer/importer
+4. **Timing Classification**: For sellers, determine if services are needed pre-shipment or post-shipment
+
+### Key Decision Points:
+
+- **Knowledge Assessment**: Whether client understands payment method options
+- **Payment Method**: Letter of Credit, Trade Collection, or Open Account
+- **Transaction Role**: Seller/Exporter vs Buyer/Importer perspective
+- **Service Timing**: Pre-shipment vs Post-shipment service needs (for sellers)
+
+### Routing Logic:
+
+- **Unknown Payment Method**: Routes to comprehensive payment method decision diagram
+- **Letter of Credit Buyer**: Routes to full LC buyer decision flow with all financing and service options
+- **Seller Services**: Split by timing (pre/post shipment) for more targeted product recommendations
+- **Trade Collection & Open Account**: Routes to specialized decision diagrams for each payment method
+
+This initial tree ensures clients are directed to the most relevant detailed decision diagrams based on their role, payment method preference, and timing needs.
