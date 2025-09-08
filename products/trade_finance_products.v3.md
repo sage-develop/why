@@ -15,38 +15,26 @@ This is a pre-shipment service for Sellers
 
 This is a pre-shipment service for sellers
 
-- Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
-- Confirmation can only be added as an add-on after Letter of Credit Advising.
-- Confirmation increases cost because the seller’s bank takes on additional risk.
-- Use when the seller values security of payment over cost savings.
-- Applicable to both **international and domestic** trade.
-- In domestic trade, use when the seller doesn’t trust buyer’s bank and wants to transfer **counter party risk** to their own bank
-- In international trade, use when the seller wants to transfer **counter party sovereign risk** to their local bank.
-- Use when trading with new buyers, unfamiliar partners, or higher-risk countries.
-- Use when the seller wants to add assurance of payment by to rely on a domestic/local bank instead of the issuing bank alone.
-- After selecting this product, the seller can also continue to choose others.
+- First, check if the seller is using a Domestic or International transaction.
+- If the seller is doing Domestic transaction, are they worried about a **counterparty risk**, if yes, the seller can use Letter of Credit Confirmation.
+- If the seller is doing International transaction, are they worried about a **counterparty sovereign risk**, if yes, the seller can use Letter of Credit Confirmation.
+- If the seller has no concern about the counter party risk or counter party sovereign risk, the seller can continue to choose other products.
 
 #### 4. Assignment of Proceeds under Letter of Credit
 
 This is pre-shipment service for sellers
 
-- Use when the buyer and seller have agreed to settle the trade using a Letter of Credit.
-- Assignment can be done whether or not the LC is transferable.
-- Assignment only passes on the right to receive money under the LC; the seller still must fulfill all LC terms and present compliant documents.
-- Use when the seller wants to **redirect payments** to third parties involved in fulfilling the order.
-- Use when the seller wants to repay the bank directly from LC proceeds.
-- Simplifies settlement by allowing funds to go directly to the intended party instead of passing through the seller.
+- Use if the seller wants to **redirect payments** to third parties involved in fulfilling the order.
 - After selecting this product, the seller can also continue to choose others.
 
 #### 5. Letter of Credit Transferring
 
 For the Seller or trading company that acts as a **middleman** and doesn't actually make the goods.
 
-- Available only when the buyer and seller agree to settle trade using a **transferable Letter of Credit.**
-- Allows the seller to avoid using their own cash to pay the supplier upfront.
-- Use when the seller wants to secure a profit margin by transferring a smaller amount to the supplier.
+- Only available if the LC is transferrable.
+- If the LC is not transferrable, the seller can consider using Assignment of Proceeds under Letter of Credit instead or pay the supplier directly.
 - Suitable for middlemen who do not manufacture or ship goods but want to manage the trade flow and maintain control.
-- If the LC is not transferable, the seller must use alternatives such as Assignment of Proceeds under Letter of Credit or paying the supplier directly.
+- If the seller is a middleman and chooses this product, the flow ends here.
 
 #### 16. Packing Credit for Exporters
 
@@ -59,6 +47,16 @@ This is a pre-shipment loan for sellers
 - Enables exporters to take on new orders without waiting for previous payments.
 - After selecting this product, the seller can also use other LC products, including post-shipment options.
 
+<!-- LC Seller Pre-shipment Prompt
+<!-- - Make a new decision diagram for seller pre-shipment product @trade_finance_products.v3.md
+- Consider every single the bullet points below each product
+- The highlighted sentences must be a decision point.
+- If its the end of the flow, add a sentence to conclude the flow
+- If the seller can continue choosing other product continue the flow
+- Only the product will be inside the colored box (all same color) any box that doesn't say product's name will have no color
+- The seller is already using LC payment method
+- Combine duplicate decision points if possible -->
+
 ### Sellers - Post-shipment
 
 #### 8. Export Bill under Letter of Credit
@@ -67,9 +65,9 @@ This is a post-shipment service for sellers
 
 - Use when the buyer and seller have agreed to settle the trade using a **Sight LC**.
 - The loan is used when the seller wants **immediate payment** under a Sight LC.
-- The bank advances funds once compliant documents are presented.
-- Loan type: advance/negotiation under Sight LC.
-- Use when the seller does not want to wait for the buyer’s bank or buyer’s payment.
+- Calculate financing gap with Sight LC formula to know if the seller needs financing.
+- If the seller needs financing, choose Export Bill under Letter of Credit (Bank advances funds once docs presented), if not, wait until the buyer's bank pays at sight.
+- The bank advances funds once compliant documents are presented then the transaction is completed.
 
 #### 9. Bill Receivable under Letter of Credit
 
@@ -77,10 +75,22 @@ This is a post-shipment loan for sellers
 
 - Use when the buyer and seller agreed on **Usance LC**
 - Provides financing immediately after documents are presented, even though payment is deferred until maturity.
-- Loan type: discounting under Usance LC.
-- Suitable when payment will only be made after a credit period (e.g., 30–180 days).
-- Use when the seller does not want to wait months for the LC maturity to receive funds.
-- Use when the seller wants **post-shipment working capital** to cover costs or accept new orders.
+- Calculate financing gap with Usance LC formula to know if the seller needs financing.
+- If the seller needs financing, choose Bill Receivable under Letter of Credit (Bank discounts usance bill), if not, wait until maturity date for buyer’s bank to pay.
+- Use when the seller wants immediate payment after documents are presented under Usance LC.
+- Use when the seller wants **post-shipment working capital**.
+- The transaction is completed at LC maturity when the buyer’s bank pays.
+
+<!-- LC Seller Post-shipment Prompt -->
+<!-- - Make a new seller post-shipment products decision diagram
+- Consider all the bullet points below each 'seller - post-shipment' product in @trade_finance_products.v3.md
+- If its the end of the flow, add a sentence to conclude the flow
+- If the seller can continue choosing other product, let the flow continue
+- Only the product will be inside the colored box (all same color) any box that doesn't say product's name will have no color
+- In the product box, only put in full product name, no extra explanation
+- The seller is already using LC payment method timing is post-shipment
+- A product should appear once in the decision diagram.
+- Ask one question at a decision point. -->
 
 ### Buyers - Pre-shipment
 
@@ -95,55 +105,56 @@ This is a pre-shipment service for Buyers
 
 This is financing for buyers.
 
-- Can use only if the B/L is already at the buyer's bank.
+- Can be used only if the original B/L is already at the buyer's bank.
 - The **B/L also needs to be issued under the buyer's name**.
-- Needs to determine if the buyer is using Sight LC or Usance LC.
-- If the buyer is using Sight LC, separately calculate financing gap using Sight LC formula.
-- If the buyer is using Usance LC, separately calculate financing gap using Usance LC formula.
+- Must determine if the buyer is using **Sight LC or Usance LC**.
+- If the buyer is using Sight LC, separately calculate the financing gap using the Sight LC formula.
+- If the buyer is using Usance LC, separately calculate the financing gap using the Usance LC formula.
 - Determine if the buyer needs financing from the financing gap result.
 - If financing is needed, use P/N under Letter of Credit (Buyer).
-- If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to finish the flow.
+- If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to complete the flow.
 
 #### 7. Trust Receipt Loan under Letter of Credit
 
 This is financing for buyers.
 
-- Can use only if the B/L is already at the buyer's bank.
-- The **B/L also needs to be issued under the buyer's bank's name**.
-- Needs to determine if the buyer is using Sight LC or Usance LC.
-- If the buyer is using **Sight LC**, separately calculate financing gap using Sight LC formula.
-- If the buyer is using **Usance LC**, separately calculate financing gap using Usance LC formula.
+- Can be used only if the original B/L is already at the buyer's bank.
+- The **original B/L also needs to be issued under the buyer's bank's name**.
+- Must determine if the buyer is using **Sight LC or Usance LC**.
+- If the buyer is using Sight LC, separately calculate the financing gap using the Sight LC formula.
+- If the buyer is using Usance LC, separately calculate the financing gap using the Usance LC formula.
 - Determine if the buyer needs financing from the financing gap result.
 - If financing is needed, use Trust Receipt Loan under Letter of Credit.
 - After using Trust Receipt Loan under Letter of Credit, the buyer still needs to transfer goods ownership to themselves using Endorsement Services.
-- If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to finish the flow.
+- If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to complete the flow.
 
 #### 18. Shipping Guarantee Issuance
 
 This is a service for buyers.
 
-- Use when the **the buyer's bank haven't yet received the original B/L** but the buyer needs the goods.
-- The buyer use Shipping Guarantee to claim the goods immediately not after exchange B/L with the Shipping Guarantee.
-- When the buyer uses Shipping Guarantee Issuance, merge the flow where the buyer always able to choose other products from the point asking under whose name is B/L issued?.
-- After the original B/L arrived, to check under whose name the B/L is issued.
-- Using Shipping Guarantee Issuance will affect the end of all other products flow.
-- If Shipping Guarantee issued in the buyer’s name, use it to exchange for the Shipping Guarantee.
-- If Shipping Guarantee issued in the buyer’s bank’s name, the buyer must also use Endorsement Services.
+- Use when **the buyer's bank haven't yet received the original B/L**.
+- The buyer uses Shipping Guarantee to claim the goods immediately (not after exchange B/L with the Shipping Guarantee).
+- When the original B/L has arrived, continue the flow checking whose name the B/L is issued in.
+- Using Shipping Guarantee Issuance will affect the end of all other products' flow.
+- If a Shipping Guarantee is issued in the buyer’s name, use it to exchange for the Shipping Guarantee.
+- If a Shipping Guarantee is issued in the buyer’s bank’s name, the buyer must also use Endorsement Services.
 
 #### 19. Endorsement Services
 
 This is a service for buyers.
 
-- Use when **the B/L is issued under the buyer’s bank’s name**.
 - Note: The buyer’s bank endorses the B/L, transferring ownership of the goods to the buyer.
-- The buyer can only claims the goods after the B/L is under the buyer's name.
+- The buyer can only claim the goods after the B/L is under the buyer's name.
 - The original B/L must have arrived at the buyer's bank before this service can be used.
+- Use when the buyer wants to get the ownership of the goods but **the B/L is issued under the buyer’s bank’s name**.
 - Can be combined with a Trust Receipt Loan under Letter of Credit if the buyer needs the goods immediately but does not have the cash to pay upfront.
 
 <!-- LC Buyer Pre-shipment Prompt
-- Please make a new decision mermaid diagram for buyer preshipment product @trade_finance_products.v3.md
-- Consider the bullet points below each product
+- Please make a new decision diagram for buyer preshipment product @trade_finance_products.v3.md
+- Consider every single the bullet points below each product
+- The highlighted sentences must be a decision point.
 - If its the end of the flow, add a sentence to conclude the flow
 - If the buyer can continue choosing other product continue the flow
-- Only the product will be inside the colored box (all same color) any box that doesnt say product's name will have no color
-- The buyer is already using LC payment method -->
+- Only the product will be inside the colored box (all same color) any box that doesn't say product's name will have no color
+- The buyer is already using LC payment method
+- Combine duplicated decision points if possible -->

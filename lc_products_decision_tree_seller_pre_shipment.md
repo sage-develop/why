@@ -8,52 +8,36 @@ This decision diagram covers all LC-related products offered by the bank specifi
 
 ```mermaid
 flowchart TD
-    A[Seller/Exporter Needs LC Services] --> B[Letter of Credit Advising]
+    A@{ label: "Seller Pre-shipment<br style=\"--tw-scale-x:\">LC Payment Method" } --> B["Letter of Credit Advising"]
+    B --> C{"Is this a domestic or<br>international transaction?"}
+    C -- Domestic --> D{"Worried about<br>counter party risk?"}
+    C -- International --> E{"Worried about counter party<br>sovereign risk?"}
+    D -- Yes --> F["Letter of Credit Confirmation"]
+    E -- Yes --> F
+    D -- No --> G{"Is the seller acting<br>as a middleman?"}
+    E -- No --> G
+    F --> G
+    G -- Yes --> H{"Is the LC transferrable?"}
+    G -- No --> I{"Need to redirect payments<br>to third parties?"}
+    H -- Yes --> J["Letter of Credit Transferring"]
+    H -- No --> K{"Consider Assignment of Proceeds<br>or pay supplier directly?"}
+    J --> L["Flow ends here.<br>Middleman has transferred LC responsibility."]
+    K -- Assignment of Proceeds --> M["Assignment of Proceeds under Letter of Credit"]
+    K -- Pay directly --> N{"Need pre-shipment<br>working capital?"}
+    I -- Yes --> M
+    I -- No --> N
+    M --> N
+    N -- Yes --> O["Packing Credit for Exporters"]
+    N -- No --> P["Continue to post-shipment<br>products or complete transaction"]
+    O --> P
 
-    B --> C[Pre-Shipment Services/Financing]
-    B --> D[Post-Shipment Services/Financing]
-
-        %% Pre-Shipment Branch
-    C --> E{Is the transaction International or Domestic?}
-    E -->|International| F{Want to transfer foreign risk to local bank?}
-    E -->|Domestic| G{Want to transfer buyer's bank risk to own bank?}
-
-    F -->|Yes| H[Letter of Credit Confirmation]
-    F -->|No| I{Does seller produce goods or act as middleman?}
-    G -->|Yes| H
-    G -->|No| I
-    H --> I
-
-    I -->|Produces own goods| J{Need payment redirection?}
-    J -->|Yes| K{What type of redirection?}
-    K -->|Repay Bank / Pay Supplier / Simplify Routing| L[Assignment of Proceeds under Letter of Credit]
-    J -->|No| M{Need pre-shipment financing?}
-    L --> M
-
-    I -->|Act as a middleman| O{Is LC transferable?}
-    O -->|Yes| N{Want to transfer LC to supplier?}
-    N -->|Yes| P[Letter of Credit Transferring]
-    N -->|No| J
-    O -->|No| J
-
-    M -->|Yes| Q{Need working capital?}
-    Q -->|Yes| R[Packing Credit for Exporters]
-    M -->|No| S[Ready to Ship]
-    R --> S
-    P --> T[LC Transferred to Supplier - Supplier Ships Goods]
-
-            %% Post-Shipment Branch
-    D --> U{Sight or Usance LC?}
-
-    U -->|Sight LC| V[Export Bill under Letter of Credit]
-    U -->|Usance LC| W{Need financing before maturity?}
-    W -->|Yes| X[Bill Receivable under Letter of Credit]
-    W -->|No| Y[Wait for Maturity Payment]
-
-    %% Styling
-    classDef product fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-
-    class B,H,L,P,R,V,X product
+    A@{ shape: rect}
+     B:::product
+     F:::product
+     J:::product
+     M:::product
+     O:::product
+    classDef product fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000s
 ```
 
 ## Product Categories

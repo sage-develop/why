@@ -1,96 +1,103 @@
-# Letter of Credit Products Decision Diagram - Buyer Pre-shipment
+# Letter of Credit Products - Buyer/Importer Decision Diagram
 
-This decision diagram shows the flow for buyers in pre-shipment stage when using Letter of Credit payment method.
+## Overview
+
+This decision diagram covers all LC-related products offered by the bank specifically for buyers/importers. It starts with core LC issuance services and then branches based on shipment status, document availability, title ownership, and financing requirements.
 
 ## Decision Flow
 
 ```mermaid
 flowchart TD
-    START([Buyer using LC Payment Method]) --> LC[Letter of Credit Issuance]
+    Start(["Buyer LC Payment Method"]) --> Pre["Pre-shipment"]
+    Pre --> LC_Issuance["Letter of Credit Issuance"]
+    LC_Issuance --> BL_Arrived@{ label: "Has the original B/L<br>arrived at buyer's bank?" }
+    BL_Arrived -- No --> Shipping_Guarantee["Shipping Guarantee Issuance"]
+    Shipping_Guarantee --> Claim_Goods["Buyer claims goods immediately"]
+    Claim_Goods --> BL_Wait["Wait for original B/L to arrive"]
+    BL_Wait --> BL_Name_Check{"In whose name is<br>the B/L issued?"}
+    BL_Arrived -- Yes --> BL_Name_Check
+    BL_Name_Check -- Buyer's name --> LC_Type_PN{"LC type:<br>Sight or Usance?"}
+    BL_Name_Check -- Buyer's bank's name --> LC_Type_TR{"LC type:<br>Sight or Usance?"}
+    LC_Type_PN -- Sight LC --> Calc_Gap_PN_Sight["Calculate financing gap<br>using Sight LC formula"]
+    LC_Type_PN -- Usance LC --> Calc_Gap_PN_Usance["Calculate financing gap<br>using Usance LC formula"]
+    LC_Type_TR -- Sight LC --> Calc_Gap_TR_Sight["Calculate financing gap<br>using Sight LC formula"]
+    LC_Type_TR -- Usance LC --> Calc_Gap_TR_Usance["Calculate financing gap<br>using Usance LC formula"]
+    Calc_Gap_PN_Sight --> Need_Finance_PN{"Does buyer need<br>financing?"}
+    Calc_Gap_PN_Usance --> Need_Finance_PN
+    Calc_Gap_TR_Sight --> Need_Finance_TR{"Does buyer need<br>financing?"}
+    Calc_Gap_TR_Usance --> Need_Finance_TR
+    Need_Finance_PN -- Yes --> PN_LC["P/N under Letter of Credit (Buyer)"]
+    PN_LC --> Check_Shipping_PN{"Was Shipping Guarantee<br>used earlier?"}
+    Need_Finance_TR -- Yes --> TR_LC["Trust Receipt Loan under Letter of Credit"]
+    TR_LC --> Endorsement["Endorsement Services"]
+    Endorsement --> Check_Shipping_TR{"Was Shipping Guarantee<br>used earlier?"}
+    Need_Finance_PN -- No --> Wait_Payment_PN["Wait for LC payment<br>at maturity"]
+    Need_Finance_TR -- No --> Wait_Payment_TR["Wait for LC payment<br>at maturity"]
+    Wait_Payment_PN --> Check_Shipping_PN
+    Wait_Payment_TR --> Check_Shipping_TR
+    Check_Shipping_PN -- Yes --> Exchange_SG_PN["Exchange B/L for<br>Shipping Guarantee"]
+    Check_Shipping_TR -- Yes --> Exchange_SG_TR["Exchange B/L for<br>Shipping Guarantee"]
+    Check_Shipping_PN -- No --> Complete_PN["Transaction completed.<br>Buyer has goods and financing."]
+    Check_Shipping_TR -- No --> Complete_TR["Transaction completed.<br>Buyer has goods ownership."]
+    Exchange_SG_PN --> Complete_PN
+    Exchange_SG_TR --> Complete_TR
 
-    LC --> BL_STATUS{Has B/L arrived at<br/>buyer's bank?}
-
-    BL_STATUS -->|No, but buyer needs goods immediately| SG[Shipping Guarantee Issuance]
-    BL_STATUS -->|Yes| BL_NAME{Under whose name<br/>is B/L issued?}
-
-    SG --> SG_GOODS[Buyer claims goods immediately<br/>using Shipping Guarantee]
-    SG_GOODS --> WAIT_BL[Wait for original B/L to arrive]
-    WAIT_BL --> BL_NAME
-
-    BL_NAME -->|Buyer's name| LC_TYPE_BUYER{LC Type:<br/>Sight LC or Usance LC?}
-    BL_NAME -->|Buyer's bank name| LC_TYPE_BANK{LC Type:<br/>Sight LC or Usance LC?}
-
-    LC_TYPE_BUYER -->|Sight LC| CALC_SIGHT_BUYER[Calculate financing gap<br/>using Sight LC formula]
-    LC_TYPE_BUYER -->|Usance LC| CALC_USANCE_BUYER[Calculate financing gap<br/>using Usance LC formula]
-
-    CALC_SIGHT_BUYER --> NEED_FINANCE_BUYER{Does buyer need<br/>financing?}
-    CALC_USANCE_BUYER --> NEED_FINANCE_BUYER
-
-    NEED_FINANCE_BUYER -->|Yes| PN[P/N under Letter of Credit]
-    NEED_FINANCE_BUYER -->|No| CHECK_SG_BUYER{Was Shipping Guarantee<br/>Issuance used?}
-
-    PN --> CHECK_SG_PN{Was Shipping Guarantee<br/>Issuance used?}
-
-    CHECK_SG_PN -->|Yes| EXCHANGE_PN[Exchange B/L for<br/>Shipping Guarantee]
-    CHECK_SG_PN -->|No| END_PN[Trade finance flow completed.<br/>Buyer can proceed with goods clearance.]
-
-    CHECK_SG_BUYER -->|Yes| EXCHANGE_BUYER[Exchange B/L for<br/>Shipping Guarantee]
-    CHECK_SG_BUYER -->|No| END_BUYER[Trade finance flow completed.<br/>Buyer can proceed with goods clearance.]
-
-    LC_TYPE_BANK -->|Sight LC| CALC_SIGHT_BANK[Calculate financing gap<br/>using Sight LC formula]
-    LC_TYPE_BANK -->|Usance LC| CALC_USANCE_BANK[Calculate financing gap<br/>using Usance LC formula]
-
-    CALC_SIGHT_BANK --> NEED_FINANCE_BANK{Does buyer need<br/>financing?}
-    CALC_USANCE_BANK --> NEED_FINANCE_BANK
-
-    NEED_FINANCE_BANK -->|Yes| TR[Trust Receipt Loan under Letter of Credit]
-    NEED_FINANCE_BANK -->|No| ES[Endorsement Services]
-
-    TR --> ES_AFTER_TR[Endorsement Services]
-
-    ES --> CHECK_SG_ES{Was Shipping Guarantee<br/>Issuance used?}
-    ES_AFTER_TR --> CHECK_SG_TR{Was Shipping Guarantee<br/>Issuance used?}
-
-    CHECK_SG_ES -->|Yes| EXCHANGE_ES[Exchange B/L for<br/>Shipping Guarantee]
-    CHECK_SG_ES -->|No| END_ES[Trade finance flow completed.<br/>Buyer has ownership and can proceed with goods clearance.]
-
-    CHECK_SG_TR -->|Yes| EXCHANGE_TR[Exchange B/L for<br/>Shipping Guarantee]
-    CHECK_SG_TR -->|No| END_TR[Trade finance flow completed.<br/>Buyer has ownership and can proceed with goods clearance.]
-
-    EXCHANGE_PN --> END_EXCHANGE_PN[Trade finance flow completed.<br/>Goods delivered and Shipping Guarantee settled.]
-    EXCHANGE_BUYER --> END_EXCHANGE_BUYER[Trade finance flow completed.<br/>Goods delivered and Shipping Guarantee settled.]
-    EXCHANGE_ES --> END_EXCHANGE_ES[Trade finance flow completed.<br/>Goods delivered, ownership transferred, and Shipping Guarantee settled.]
-    EXCHANGE_TR --> END_EXCHANGE_TR[Trade finance flow completed.<br/>Goods delivered, ownership transferred, and Shipping Guarantee settled.]
-
-    classDef product fill:#e1f5fe
-    class LC,SG,PN,TR,ES,ES_AFTER_TR product
+    BL_Arrived@{ shape: diamond}
+     LC_Issuance:::product
+     Shipping_Guarantee:::product
+     PN_LC:::product
+     TR_LC:::product
+     Endorsement:::product
+    classDef product fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
 ```
 
-## Products Covered
+## Product Categories
 
-### Mandatory Products
+### Core Service
 
-- **Letter of Credit Issuance**: Base LC product mandatory when buyer and seller agree to use LC payment method
+- **Letter of Credit Issuance/Amendment** - Base LC product for buyers/importers
 
-### Optional Products Based on Situation
+### Post-Shipment Services & Financing
 
-- **Shipping Guarantee Issuance**: When buyer's bank hasn't received original B/L but buyer needs goods immediately
-- **P/N under Letter of Credit (Buyer)**: Financing when B/L is at buyer's bank and issued under buyer's name
-- **Trust Receipt Loan under Letter of Credit**: Financing when B/L is at buyer's bank and issued under buyer's bank's name
-- **Endorsement Services**: Required when B/L is issued under buyer's bank's name to transfer ownership to buyer
+- **Trust Receipt Loan under Letter of Credit** - Buyer financing when bank has title to goods via B/L
+- **P/N under Letter of Credit Buyer** - Buyer financing when buyer has title to goods via B/L
+- **Shipping Guarantee Issuance** - Service when buyer needs goods released before bank receives original B/L
+- **Endorsement Services** - Service to transfer ownership from bank to buyer (when bank had title)
+- **Exchange B/L for Shipping Guarantee** - Service to replace temporary shipping guarantee with original B/L
 
-## Key Decision Points
+## Decision Logic
 
-1. **B/L Receipt**: Whether buyer's bank has received the original Bill of Lading
-2. **B/L Ownership**: Under whose name the B/L is issued (buyer vs buyer's bank)
-3. **LC Type**: Whether using Sight LC or Usance LC for financing calculations
-4. **Financing Need**: Based on financing gap calculation results
-5. **Shipping Guarantee Usage**: Whether Shipping Guarantee Issuance was used earlier in the flow
+### Primary Decision Points:
 
-## Flow Conclusions
+1. **Document Status** - Whether the buyer's bank has received the original B/L
+2. **Immediate Release** - Whether buyer wants goods released before B/L arrival (Shipping Guarantee)
+3. **Payment Terms** - Whether LC is Sight or Usance (when B/L received)
+4. **Title Ownership** - Whether bank or buyer has title to goods via Bill of Lading
+5. **Financing Needs** - Whether buyer needs working capital to handle goods
+6. **Shipping Guarantee Settlement** - Whether to exchange B/L for previously issued Shipping Guarantee
 
-The diagram shows multiple ending scenarios:
+### Key Considerations:
 
-- **Simple completion**: When no additional financing or services are needed
-- **Exchange completion**: When Shipping Guarantee was used and needs to be exchanged with B/L
-- All flows conclude with either completing the trade finance process or proceeding with trade settlement
+- **LC Issuance/Amendment** is the prerequisite core service for all buyers
+- **Early Shipping Guarantee** option available when bank hasn't received B/L but buyer needs goods released immediately
+- **Title ownership** (via B/L) determines the type of financing available:
+  - Bank has title → Trust Receipt Loan → Endorsement Services
+  - Buyer has title → P/N under Letter of Credit Buyer
+- **Early document timing** creates the option for Shipping Guarantee when buyer needs goods released before bank receives original B/L
+- **Shipping Guarantee closure** is required when guarantee was used - B/L must be exchanged to close the bank's liability
+- **Financing decisions** are made after establishing title ownership
+
+### Flow Logic:
+
+The decision tree follows the natural sequence of international trade:
+
+1. LC is issued for the transaction
+2. Check if bank has received original B/L
+   - If No: Decide whether to release goods immediately (Shipping Guarantee) or wait for B/L
+3. If B/L received: Determine payment terms (Sight or Usance LC)
+4. Determine who has title to the goods
+5. Provide appropriate services and financing based on title ownership:
+   - Bank has title → Financing decision → Trust Receipt or Endorsement → Was Shipping Guarantee used? → Exchange if needed → Claim goods
+   - Buyer has title → Financing decision → P/N or Wait for Maturity → Was Shipping Guarantee used? → Exchange if needed → Claim goods
+
+This ensures buyers receive services that match their exact position in the trade cycle and cash flow requirements.
