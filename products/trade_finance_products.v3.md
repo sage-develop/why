@@ -41,13 +41,13 @@ the seller can consider using Assignment of Proceeds under Letter of Credit inst
 
 #### 16. Packing Credit for Exporters
 
-This is a pre-shipment loan for sellers
+This is a pre-shipment financing for sellers
 
 - Provides sellers with an upfront loan to prepare and ship goods.
 - The loan is repaid once the seller receives payment for the goods.
 - Use when the seller needs **pre-shipment working capital** to buy raw materials, cover production costs, packaging, or shipment.
-- Useful for large orders, urgent shipments, or when the exporter’s cash flow is insufficient.
-- Enables exporters to take on new orders without waiting for previous payments.
+- Useful for large orders, urgent shipments, or when the seller's cash flow is insufficient.
+- Enables sellers to take on new orders without waiting for previous payments.
 - After selecting this product, the seller can also use other LC products, including post-shipment options.
 
 <!-- LC Seller Pre-shipment Prompt
@@ -74,7 +74,7 @@ This is a post-shipment service for sellers
 
 #### 9. Bill Receivable under Letter of Credit
 
-This is a post-shipment loan for sellers
+This is a post-shipment financing for sellers
 
 - Use when the buyer and seller agreed on **Usance LC**
 - Provides financing immediately after documents are presented, even though payment is deferred until maturity.
