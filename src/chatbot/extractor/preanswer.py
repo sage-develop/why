@@ -3,8 +3,8 @@ from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_core.utils.function_calling import tool_example_to_messages
 
-from src.chatbot.decision_tree import DecisionNode, NodeType
-from src.chatbot.prompts import create_extract_preanswer_prompt
+from ..decision_tree import DecisionNode, NodeType
+from ..prompts import create_extract_preanswer_prompt
 
 # Goal:
 # Detect which decision nodes in the DAG can be pre-answered.
@@ -117,7 +117,21 @@ class PreAnswerExtractor:
                     ]
                 ),
             ),
-            # Example 3: No clear information (should extract empty list)
+            # Example 3: Domestic only business
+            (
+                "We only operate domestically and don't deal with foreign currencies.",
+                PreAnsweredQuestions(
+                    answers=[
+                        DecisionTreeAnswer(
+                            node_id="ClientType",
+                            question="What is the client's business activity?",
+                            chosen_answer="Domestic only",
+                            confidence="High",
+                        )
+                    ]
+                ),
+            ),
+            # Example 4: No clear information (should extract empty list)
             (
                 "The weather is sunny today.",
                 PreAnsweredQuestions(answers=[]),

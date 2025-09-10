@@ -3,12 +3,14 @@ from dotenv import load_dotenv
 from pathlib import Path
 import sys
 import os
+import tempfile
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.chatbot.chatbot import GlobalMarketsChatbot
+from src.pdf2txt import extract_text_from_pdf
 
 # Load environment variables
 load_dotenv()
@@ -16,7 +18,7 @@ load_dotenv()
 # Page configuration
 st.set_page_config(page_title="Global Markets Product Chatbot", layout="wide")
 
-# Initialize chatbot
+# Initialize chatbot and client extractor
 if "chatbot" not in st.session_state:
     try:
         openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -73,12 +75,6 @@ with st.sidebar:
         st.write(f"**Questions Asked:** {session_info['conversation_length']}")
         st.write(f"**Facts:** {session_info['client_information']}")
 
-        # st.subheader("Progress")
-        # fx_status = "Complete" if session_info["fx_completed"] else "⏳ In Progress"
-        # ir_status = "Complete" if session_info["ir_completed"] else "⏳ Pending"
-        # st.write(f"**FX Branch:** {fx_status}")
-        # st.write(f"**IR Branch:** {ir_status}")
-
         if session_info["recommended_products"]:
             st.subheader("Products Identified")
             for product in session_info["recommended_products"]:
@@ -129,20 +125,108 @@ else:
             "Upload client document (PDF, DOCX, or TXT):", type=["pdf", "docx", "txt"]
         )
 
+        # Process uploaded file
+        uploaded_text = ""
+        if uploaded_file is not None:
+            if uploaded_file.type == "application/pdf":
+                # Handle PDF file
+                with tempfile.NamedTemporaryFile(
+                    delete=False, suffix=".pdf"
+                ) as tmp_file:
+                    tmp_file.write(uploaded_file.getvalue())
+                    tmp_file_path = tmp_file.name
+
+                try:
+                    uploaded_text = extract_text_from_pdf(tmp_file_path)
+                    st.success("PDF processed successfully!")
+                    with st.expander("Show raw extracted text"):
+                        st.text_area(
+                            "Raw extracted text:",
+                            uploaded_text,
+                            height=200,
+                            disabled=True,
+                        )
+                except Exception as e:
+                    st.error(f"Error processing PDF: {e}")
+                finally:
+                    # Clean up temporary file
+                    if os.path.exists(tmp_file_path):
+                        os.unlink(tmp_file_path)
+            else:
+                # Handle text files (TXT, DOCX - for now just TXT)
+                try:
+                    uploaded_text = str(uploaded_file.read(), "utf-8")
+                    st.success("Text file processed successfully!")
+                    with st.expander("Show uploaded text content"):
+                        st.text_area(
+                            "Text content:", uploaded_text, height=200, disabled=True
+                        )
+                except Exception as e:
+                    st.error(f"Error processing text file: {e}")
+
+        # Combine manual input and uploaded file content
+        raw_combined_text = []
+        if client_info:
+            raw_combined_text.append(client_info)
+        if uploaded_text:
+            raw_combined_text.append(uploaded_text)
+
+        combined_raw_text = "\n\n".join(raw_combined_text)
+
         if st.button("Submit Client Info", use_container_width=True):
             try:
-                # Process client input using modern extraction
-                result = st.session_state.chatbot.process_client_input(
-                    st.session_state.current_session.session_id, client_info
-                )
+                # Process client input - chatbot will handle extraction internally
+                with st.spinner("Performing comprehensive client analysis..."):
+                    result = st.session_state.chatbot.process_client_input(
+                        st.session_state.current_session.session_id,
+                        combined_raw_text,
+                    )
+
+                # Display analysis results if we have client analysis
+                if result and combined_raw_text.strip():
+                    # Get the session to access client_analysis
+                    session = st.session_state.chatbot.get_session(
+                        st.session_state.current_session.session_id
+                    )
+
+                    if session and session.client_analysis:
+                        st.success(
+                            "Client analysis completed! ✅ Categorized + Pre-answered questions"
+                        )
+                        with st.expander(
+                            "Show comprehensive client analysis", expanded=True
+                        ):
+                            formatted_summary = st.session_state.chatbot.extractor.format_analysis_summary(
+                                session.client_analysis
+                            )
+                            st.markdown(formatted_summary)
 
                 if result:
                     # Add to conversation history
-                    if client_info:
+                    if combined_raw_text.strip():
+                        # Get session to check for client analysis
+                        session = st.session_state.chatbot.get_session(
+                            st.session_state.current_session.session_id
+                        )
+
+                        if session and session.client_analysis:
+                            # Create brief summary from client analysis
+                            analysis = session.client_analysis
+                            pre_answered_count = len(
+                                [
+                                    q
+                                    for q in analysis.pre_answered_questions
+                                    if q.confidence in ["High", "Medium"]
+                                ]
+                            )
+                            brief_summary = f"""Client Analysis: {analysis.client_information.business_type.category} | {analysis.client_information.industry.sector} | {analysis.client_information.business_size.category} | {analysis.client_information.business_coverage.coverage_type} operations | {pre_answered_count} questions pre-answered"""
+                        else:
+                            brief_summary = "Client information provided"
+
                         st.session_state.conversation_history.append(
                             {
                                 "type": "user",
-                                "content": f"Client Info: {client_info}",
+                                "content": brief_summary,
                             }
                         )
                         extracted_count = result.get("extracted_count", 0)
@@ -165,8 +249,9 @@ else:
                         result["current_node"]
                         and result["current_node"] != "consultation_complete"
                     ):
-                        current_node = st.session_state.chatbot.decision_tree.get_node(
-                            result["current_node"]
+                        current_node = st.session_state.chatbot.tree_manager.get_node(
+                            result["current_node"],
+                            st.session_state.current_session.current_tree,
                         )
                         if current_node:
                             response = (
@@ -184,8 +269,9 @@ else:
 
     else:
         # Normal question nodes
-        current_node = st.session_state.chatbot.decision_tree.get_node(
-            st.session_state.current_session.current_node
+        current_node = st.session_state.chatbot.tree_manager.get_node(
+            st.session_state.current_session.current_node,
+            st.session_state.current_session.current_tree,
         )
         if current_node:
             st.markdown(f"### {current_node.question}")
