@@ -149,6 +149,7 @@ This is a service for buyers.
 
 ### Base Prompt
 
+- Consider every single bullet point below each product in @trade_finance_products.v3.md.
 - The highlighted sentences must be a decision point.
 - If it's the end of the flow, add a sentence to conclude the flow.
 - Only the product will be inside the colored box (all the same color). Any box that doesn't say the product's name will have no color.
