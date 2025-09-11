@@ -1,5 +1,4 @@
 from pathlib import Path
-import json
 
 from .models import (
     DecisionTree,
@@ -60,16 +59,16 @@ class Chatbot:
         # Step 1: Extract client info using LLM + Pydantic model
         client_info = self.extractor.extract(client_text, SellerPostShipmentLCDecision)
 
-        # Step 2: Store extracted attributes in session facts
+        # Step 2: Store extracted attributes in session facts as boolean strings
         all_nodes = self._get_all_nodes()
         for node in all_nodes:
             attr_name = node.attr_name
             if attr_name and hasattr(client_info, attr_name):
                 value = getattr(client_info, attr_name)
                 if value is not None:
-                    # Store in session using attribute name as key
-                    # {"is_sight_lc": "true", "is_usance_lc": "false", "needs_financing": "true"}
-                    session.set_fact(attr_name, str(value))
+                    # Store in session using boolean string representation
+                    # {"is_sight_lc": "true", "needs_financing": "false"}
+                    session.set_fact(attr_name, str(value).lower())
 
         # Step 3: Mark initial processing as done and set starting position
         session.initial_processing_done = True
@@ -141,43 +140,41 @@ class Chatbot:
                 session.current_node_id = current_node.children[0].node_id
                 return self.get_next_question(session)  # Continue traversal
 
-        # For decision nodes, check if we already have the answer using attribute name
-        if current_node.node_type == NodeType.DECISION and current_node.attr_name:
-            if session.has_fact(current_node.attr_name):
-                # We have the answer, move to the appropriate child
-                answer = session.get_fact(current_node.attr_name)
-                next_node = self._find_next_node_by_answer(current_node, answer)
-                if next_node:
-                    session.current_node_id = next_node.node_id
-                    return self.get_next_question(session)  # Recursive call to continue
-
-        # Try LLM auto-answer before asking the user
+        # For decision nodes, check if we have facts that can determine the path
         if current_node.node_type == NodeType.DECISION:
-            llm_answer = self._try_auto_answer_with_llm(current_node, session)
+            # Case 1: Check if current node has an attribute and we have a matching fact
+            if current_node.attr_name and session.has_fact(current_node.attr_name):
+                fact_value = session.get_fact(current_node.attr_name)
 
-            if llm_answer and llm_answer.get("auto_answered"):
-                # LLM is confident - process the answer automatically
-                answer = llm_answer["answer"]
-
-                # Store the fact using attribute name or node-specific key as fallback
-                fact_key = (
-                    current_node.attr_name or f"node_{current_node.node_id}_response"
-                )
-                session.set_fact(fact_key, answer)
-
-                # Add to conversation history with LLM reasoning
-                question_text = self._extract_question_text(current_node)
-                session.add_conversation_turn(
-                    question_text,
-                    f"{answer} (auto-answered)",
-                    current_node.node_id,
+                # Convert boolean fact to find the edge value to traverse next
+                edge_value = self._convert_fact_to_edge_value(
+                    current_node.attr_name, fact_value, current_node
                 )
 
-                # Find next node and continue
-                next_node = self._find_next_node_by_answer(current_node, answer)
-                if next_node:
-                    session.current_node_id = next_node.node_id
-                    return self.get_next_question(session)
+                if edge_value:
+                    # Find the edge that matches this converted value
+                    for edge in current_node.edges:
+                        if edge["value"] == edge_value:
+                            target_node = self.find_node_by_id(edge["target"])
+                            if target_node:
+                                session.current_node_id = target_node.node_id
+                                return self.get_next_question(session)
+
+            # Case 2: Check if any target nodes have attributes we have facts for
+            for edge in current_node.edges:
+                target_node = self.find_node_by_id(edge["target"])
+                if (
+                    target_node
+                    and target_node.attr_name
+                    and session.has_fact(target_node.attr_name)
+                ):
+                    fact_value = session.get_fact(target_node.attr_name)
+                    # For target node attributes, "true" means this path should be taken
+                    if str(fact_value).lower() == "true":
+                        session.current_node_id = target_node.node_id
+                        return self.get_next_question(
+                            session
+                        )  # Recursive call to continue
 
         # We need to ask this question to the user
         if current_node.node_type == NodeType.DECISION:
@@ -292,128 +289,21 @@ class Chatbot:
 
         return None
 
-    def _try_auto_answer_with_llm(
-        self, current_node: DecisionTreeNode, session: ChatSession
-    ) -> dict | None:
+    def _convert_fact_to_edge_value(
+        self, attr_name: str, fact_value: str, node: DecisionTreeNode
+    ) -> str | None:
         """
-        Use LLM to analyze existing facts and try to answer the current question automatically.
-        Returns answer dict if confident, None if not confident enough.
+        Convert a boolean fact value to the corresponding edge value for navigation.
         """
-        if not current_node or current_node.node_type != NodeType.DECISION:
-            return None
+        fact_bool = str(fact_value).lower() == "true"
 
-        # Get the question text
-        question = self._extract_question_text(current_node)
-
-        # Prepare existing facts for LLM analysis
-        facts_summary = self._format_facts_for_analysis(session.facts)
-
-        if not facts_summary.strip():
-            return None  # No facts to analyze
-
-        # Try to firstly match the question attribute name with the
-        # Create prompt for LLM analysis
-        analysis_prompt = f"""
-You are analyzing a banking/trade finance conversation to determine if you can confidently answer a question based on existing facts.
-
-EXISTING FACTS:
-{facts_summary}
-
-QUESTION TO ANSWER:
-{question}
-
-POSSIBLE ANSWERS FOR THIS QUESTION:
-{self._get_possible_answers_for_node(current_node)}
-
-TASK:
-1. Analyze if the existing facts provide enough information to confidently answer this question
-2. If confident (80% or higher), provide the answer
-3. If not confident enough, indicate that user input is needed
-
-Respond in JSON format:
-{{
-    "confident": true/false,
-    "confidence_level": 0.0-1.0,
-    "answer": "your answer if confident, null otherwise",
-    "reasoning": "brief explanation of your reasoning"
-}}
-"""
-
-        try:
-            # Use the same LangChain LLM as the extractor
-            full_prompt = f"You are an expert banking analyst that helps determine answers based on available information.\n\n{analysis_prompt}"
-
-            response = self.extractor.llm.invoke(full_prompt)
-            result_text = response.content.strip()
-
-            # Parse the JSON response
-            try:
-                result = json.loads(result_text)
-
-                if (
-                    result.get("confident", False)
-                    and result.get("confidence_level", 0) >= 0.8
-                ):
-                    answer = result.get("answer")
-                    if answer:
-                        return {
-                            "answer": answer.lower(),  # Normalize to lowercase
-                            "confidence": result.get("confidence_level", 0.8),
-                            "reasoning": result.get(
-                                "reasoning", "LLM analysis of existing facts"
-                            ),
-                            "auto_answered": True,
-                        }
-            except json.JSONDecodeError:
-                # If JSON parsing fails, fall back to asking the user
-                pass
-
-        except Exception as e:
-            # If LLM call fails, fall back to asking the user
-            print(f"LLM auto-answer failed: {e}")
+        # For nodes with their own attribute and edges (like financing questions)
+        if node.attr_name == attr_name and node.edges:
+            if fact_bool and len(node.edges) >= 1:
+                # For True, use first edge (usually "yes")
+                return node.edges[0]["value"]
+            elif not fact_bool and len(node.edges) >= 2:
+                # For False, use second edge (usually "no")
+                return node.edges[1]["value"]
 
         return None
-
-    def _format_facts_for_analysis(self, facts: dict) -> str:
-        """Format existing facts for LLM analysis."""
-        if not facts:
-            return "No facts available."
-
-        formatted_facts = []
-        for key, value in facts.items():
-            # Make attribute names more readable
-            readable_key = key.replace("_", " ").title()
-
-            # Format based on attribute patterns
-            if key.startswith("is_"):
-                formatted_facts.append(f"• {readable_key[3:]}: {value}")
-            elif key.startswith("needs_"):
-                formatted_facts.append(f"• Needs {readable_key[6:]}: {value}")
-            elif key.startswith("use_"):
-                formatted_facts.append(f"• Will use {readable_key[4:]}: {value}")
-            else:
-                formatted_facts.append(f"• {readable_key}: {value}")
-
-        return "\n".join(formatted_facts)
-
-    def _get_possible_answers_for_node(self, node: DecisionTreeNode) -> str:
-        """Get possible answers for a decision node to help LLM choose correctly."""
-        if not node.children:
-            return "- No valid answers (terminal node)"
-
-        # First priority: Use edge information from the decision tree
-        if node.edges:
-            options = []
-            for edge in node.edges:
-                options.append(f"- '{edge['value']}' ({edge['label']})")
-            return "\n".join(options)
-
-        # Fallback: If no edges defined, use child node IDs
-        # This should not happen in a properly defined decision tree
-        options = []
-        for child in node.children:
-            options.append(f"- '{child.node_id.lower()}' (node {child.node_id})")
-
-        return (
-            "\n".join(options) if options else "- No valid answers (no edges defined)"
-        )
