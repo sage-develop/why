@@ -1,0 +1,17 @@
+# Trade Collection - Seller Pre-shipment Decision Diagram
+
+```mermaid
+flowchart TD
+    Start@{ label: "Seller Pre-shipment<br/>Trade Collection Payment Method" } --> NeedCapital{"Need pre-shipment working capital?"}
+
+    NeedCapital -- Yes --> PackingCredit["Packing Credit for Exporters"]
+    NeedCapital -- No --> ContinueFlow@{ label: "Continue to post-shipment<br/>products" }
+
+    PackingCredit --> ContinueFlow
+
+    Start@{ shape: stadium}
+    ContinueFlow@{ shape: rect}
+    PackingCredit:::productBox
+
+    classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+```
