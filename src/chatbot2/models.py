@@ -25,14 +25,28 @@ class SellerPostShipmentLCDecision(BaseModel):
 class DecisionTreeNode(BaseModel):
     """A decision tree node parsed from a mermaid decision tree file."""
 
+    # e.g. "B", "C", "E", "node_123"
     node_id: str = Field(description="The decision tree node ID")
+
+    # e.g. NodeType.DECISION, NodeType.END
     node_type: NodeType = Field(description="The type of the decision node")
+
+    # e.g. "SellerPostShipmentLC", "GlobalMarkets"
     tree_name: str = Field(description="Name/identifier of the decision tree")
+
+    # e.g. "is_sight_lc", "needs_financing", "use_export_bill"
     attr_name: str | None = Field(description="The attribute of the decision tree node")
+
+    # e.g. "What type of LC are you using?", "Do you need financing?"
     question: str | None = Field(description="The question of the decision tree node")
+
+    # e.g. [node_c, node_d] for a binary decision
     children: list["DecisionTreeNode"] = Field(
         default_factory=list, description="Child nodes"
     )
+
+    # e.g. [{"label": "Sight LC", "value": "sight_lc", "target": "C"},
+    #       {"label": "Yes", "value": "yes", "target": "G"}]
     edges: list[dict[str, str]] = Field(
         default_factory=list, description="Edge labels and targets from this node"
     )
