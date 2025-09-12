@@ -227,14 +227,42 @@ class Chatbot:
         if not current_node:
             return False
 
-        # Store the fact using attribute name or node-specific key as fallback
-        fact_key = current_node.attr_name or f"node_{current_node.node_id}_response"
-        session.set_fact(fact_key, response_value)
+        # Store the fact using appropriate attribute name
+        target_node = self.find_node_by_id(target_node_id)
 
-        # Add to conversation history
+        # Priority 1: Use current node's attribute name (e.g., "needs_financing" for question nodes)
+        if current_node.attr_name:
+            fact_key = current_node.attr_name
+            # Convert edge values to boolean strings for question nodes
+            if response_value in ["yes", "true"]:
+                session.set_fact(fact_key, "true")
+            elif response_value in ["no", "false"]:
+                session.set_fact(fact_key, "false")
+            else:
+                session.set_fact(fact_key, response_value)
+        # Priority 2: Use target node's attribute name (e.g., "is_sight_lc" for LC type choices)
+        elif target_node and target_node.attr_name:
+            fact_key = target_node.attr_name
+            # For target node attributes, store as "true" since this path was chosen
+            session.set_fact(fact_key, "true")
+        # Fallback: Use generic key (should rarely happen with proper decision trees)
+        else:
+            fact_key = f"node_{current_node.node_id}_response"
+            session.set_fact(fact_key, response_value)
+
+        # Add to conversation history with proper display text
         question_text = self._extract_question_text(current_node)
+
+        # Find the display text for this response value
+        display_text = response_value
+        if current_node.edges:
+            for edge in current_node.edges:
+                if edge["value"] == response_value:
+                    display_text = edge["label"]
+                    break
+
         session.add_conversation_turn(
-            question_text, response_value, session.current_node_id
+            question_text, display_text, session.current_node_id
         )
 
         # Move to the target node

@@ -77,6 +77,7 @@ with col1:
         full_text = "\n".join(filter(None, [uploaded_text, client_text]))
 
         if full_text.strip():
+            # Process with LLM if input is provided
             with st.spinner("Processing..."):
                 try:
                     chatbot.process_client_input(full_text, session)
@@ -84,7 +85,23 @@ with col1:
                 except Exception as e:
                     st.error(f"Error: {e}")
         else:
-            st.error("Please provide some input")
+            # No input provided - set up empty facts for manual navigation
+            session.facts = {}  # Empty facts JSON
+            session.initial_processing_done = True
+
+            # Set starting node manually (first decision node)
+            all_nodes = chatbot._get_all_nodes()
+            from src.chatbot2.models import NodeType
+
+            first_decision_node = next(
+                (node for node in all_nodes if node.node_type == NodeType.DECISION),
+                None,
+            )
+            session.current_node_id = (
+                first_decision_node.node_id if first_decision_node else None
+            )
+
+            st.info("No preanswered nodes")
 
     # Reset button
     if st.button("Reset"):
