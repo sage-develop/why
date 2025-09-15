@@ -35,6 +35,7 @@ This is a post-shipment finaning for sellers
 - If the seller needs financing, choose Bill Receivable under Collection (the bank discounts the accepted draft), if not, wait until maturity for the buyer to pay.
 - Use when the seller wants immediate payment after documents are presented under D/A Collection.
 - The transaction is completed at maturity when the buyer pays under D/A.
+- The seller must repay the bank even if the buyer doesn't pay.
 
 ### Buyers - Pre-shipment
 
@@ -48,7 +49,7 @@ This is a service for buyers.
 - Use when B/L has arrived at the buyer's bank.
 - Can continue choosing other Collection product by determining which payment term **the buyer is using D/P or D/A**.
 
-#### 11. P/N under Bill for Collection (Buyer)
+#### 11. P/N under Bill for Collection - Buyer
 
 This is a financing for buyers.
 
@@ -58,7 +59,7 @@ This is a financing for buyers.
 - If the buyer is using D/P, separately calculate the financing gap using the D/P formula.
 - If the buyer is using D/A, separately calculate the financing gap using the D/A formula.
 - Determine if the buyer needs financing from the financing gap result.
-- If financing is needed, the collecting bank may release the B/L using P/N under Bill for Collection (Buyer).
+- If financing is needed, the collecting bank may release the B/L using P/N under Bill for Collection - Buyer.
 - Continue the flow, with **whose name the original B/L is issued under**, if it's under the bank's name, needs to combine with Endorsement.
 - If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to complete the flow.
 

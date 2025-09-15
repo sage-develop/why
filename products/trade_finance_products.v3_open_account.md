@@ -16,11 +16,11 @@ This is a post-shipment financing for sellers
 
 ### Buyers - Pre-shipment
 
-#### 14. P/N under Open Account (Buyer)
+#### 14. P/N under Open Account - Buyer
 
 This is a pre-shipment financing for buyers.
 
-- Use P/N under Open Account (Buyer) if the buyer can’t pay the seller on due date.
+- Use P/N under Open Account - Buyer if the buyer can’t pay the seller on due date.
 
 ## Buyer
 

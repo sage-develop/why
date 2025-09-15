@@ -80,7 +80,7 @@ This is a pre-shipment service for Buyers
 - This is the base LC product for sellers in **international and domestic** trade.
 - This product is mandatory when the buyer and seller have agreed to settle the trade using a Letter of Credit.
 
-#### 6. P/N under Letter of Credit (Buyer)
+#### 6. P/N under Letter of Credit - Buyer
 
 This is financing for buyers.
 
@@ -89,7 +89,7 @@ This is financing for buyers.
 - If the buyer is using Sight LC, separately calculate the financing gap using the Sight LC formula.
 - If the buyer is using Usance LC, separately calculate the financing gap using the Usance LC formula.
 - Determine if the buyer needs financing from the financing gap result.
-- If financing is needed, and the **origianl B/L is issued under the buyer's name**. use P/N under Letter of Credit (Buyer).
+- If financing is needed, and the **origianl B/L is issued under the buyer's name**. use P/N under Letter of Credit - Buyer.
 - If Shipping Guarantee Issuance is used, the buyer needs to exchange B/L for the shipping guarantee to complete the flow.
 
 #### 7. Trust Receipt Loan under Letter of Credit

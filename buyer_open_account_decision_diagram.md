@@ -18,7 +18,7 @@ flowchart TD
 
 ## Product Details
 
-### P/N under Open Account (Buyer)
+### P/N under Open Account - Buyer
 
 - **Type**: Pre-shipment financing for buyers
 - **Purpose**: Provides financing when the buyer cannot pay the seller on the due date
