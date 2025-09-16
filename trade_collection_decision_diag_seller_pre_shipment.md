@@ -2,16 +2,13 @@
 
 ```mermaid
 flowchart TD
-    Start@{ label: "Seller Pre-shipment<br/>Trade Collection Payment Method" } --> NeedCapital{"Need pre-shipment working capital?"}
-
+    Start@{ label: "<span style=\"color:\">Trade Collection Seller</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Pre-shipment Decision Diagram</span>" } --> NeedCapital{"Need pre-shipment working capital?"}
     NeedCapital -- Yes --> PackingCredit["Packing Credit for Exporters"]
-    NeedCapital -- No --> ContinueFlow@{ label: "Continue to post-shipment<br/>products" }
-
+    NeedCapital -- No --> ContinueFlow["Continue to post-shipment<br/>products"]
     PackingCredit --> ContinueFlow
 
     Start@{ shape: stadium}
     ContinueFlow@{ shape: rect}
-    PackingCredit:::productBox
-
+     PackingCredit:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
 ```

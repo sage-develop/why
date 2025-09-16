@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart TD
-    Start@{ label: "Seller Pre-shipment<br style=\"--tw-scale-x:\">LC Payment Method" } --> LCAdvising["Letter of Credit Advising"]
+    Start@{ label: "<span style=\"color:\">LC Seller Pre-shipment</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Decision Diagram</span>" } --> LCAdvising["Letter of Credit Advising"]
     LCAdvising --> RiskConcern{"Worried about counterparty risk or counterparty sovereign risk?"}
     RiskConcern -- Yes --> LCConfirm["Letter of Credit Confirmation"]
     RiskConcern -- No --> CheckMiddleman@{ label: "Is seller a middleman who doesn't make goods?" }

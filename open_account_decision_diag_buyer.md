@@ -4,16 +4,14 @@
 
 ```mermaid
 flowchart TD
-    Start([Buyer is using Open Account payment method])
-    Start --> Q1{Can the buyer pay the seller on the due date?}
+    Start@{ label: "<span style=\"color:\">Open Account</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Buyer Decision Diagram</span>" } --> Q1{"Can the buyer pay the seller on the due date?"}
+    Q1 -- Yes --> End1["The buyer continues with standard Open Account terms.<br>No additional financing products needed."]
+    Q1 -- No --> Product1["P/N under Open Account - Buyer"]
+    Product1 --> End2["The buyer receives pre-shipment financing to meet payment obligations.<br>This completes the financing solution for Open Account transactions."]
 
-    Q1 -->|Yes| End1[The buyer continues with standard Open Account terms.<br/>No additional financing products needed.]
-    Q1 -->|No| Product1[P/N under Open Account - Buyer]
-
-    Product1 --> End2[The buyer receives pre-shipment financing to meet payment obligations.<br/>This completes the financing solution for Open Account transactions.]
-
+    Start@{ shape: stadium}
+     Product1:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    class Product1 productBox
 ```
 
 ## Product Details

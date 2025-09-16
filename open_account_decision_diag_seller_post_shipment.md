@@ -2,15 +2,14 @@
 
 ```mermaid
 flowchart TD
-    Start([Seller using Open Account<br/>Post-shipment stage]) --> Q1{Does the seller want<br/>immediate financing instead<br/>of waiting until due date?}
+    Start@{ label: "<span style=\"color:\">Open Account Seller</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Post-shipment Decision Diagram</span>" } --> Q1{"Does the seller want<br>immediate financing instead<br>of waiting until due date?"}
+    Q1 -- Yes --> P1["P/N under Open Account"]
+    Q1 -- No --> End1(["Wait for buyer payment<br>at due date.<br>No additional products needed."])
+    P1 --> End2(["Financing complete.<br>Seller receives immediate funds<br>and repays when buyer pays."])
 
-    Q1 -->|Yes| P1[P/N under Open Account]
-    Q1 -->|No| End1([Wait for buyer payment<br/>at due date.<br/>No additional products needed.])
-
-    P1 --> End2([Financing complete.<br/>Seller receives immediate funds<br/>and repays when buyer pays.])
-
+    Start@{ shape: stadium}
+     P1:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    class P1 productBox
 ```
 
 ## Decision Points Summary
