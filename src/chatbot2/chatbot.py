@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+from enum import Enum
 
 from .models import (
     DecisionTree,
@@ -6,332 +8,353 @@ from .models import (
     DecisionTreeNode,
     NodeType,
 )
+from .models.client import ClientInfo, ClientRole, SellerPreShipmentLCDecision
 from .extractor import Extractor
 from .parser import MermaidDecisionTreeParser
 from .session import ChatSession
 
 
 class Chatbot:
-    """
-    Chatbot that processes client input, extracts structured info,
-    and applies a decision tree to determine results.
-    """
-
-    def __init__(
-        self,
-        openai_api_key: str,
-        tree_md_path: str,
-        tree_name: str,
-        tree_context: str = "",
-    ):
+    def __init__(self, openai_api_key: str):
         self.extractor = Extractor(openai_api_key=openai_api_key)
-        self.tree_md_path = Path(tree_md_path)
-        self.tree_name = tree_name
-        self.tree_context = tree_context
+        self.parser = MermaidDecisionTreeParser()
+        self.trees = {}  # Cache loaded trees
+        self.decision_tree = None  # Current active tree
 
-        # Load and parse decision tree
-        self.decision_tree = self._load_tree()
-        self.session = ChatSession()
+    def load_tree_by_name(self, tree_name: str) -> DecisionTree:
+        """Load a specific decision tree by name."""
+        if tree_name in self.trees:
+            return self.trees[tree_name]
 
-    def _load_tree(self) -> DecisionTree:
-        if not self.tree_md_path.exists():
-            raise FileNotFoundError(
-                f"Decision tree file not found: {self.tree_md_path}"
-            )
+        tree_paths = {
+            "lc_seller_preshipment": "src/decision_trees/lc_seller_preshipment.md",
+            "lc_seller_postshipment": "src/decision_trees/lc_seller_postshipment.md",
+            "lc_buyer_preshipment": "src/decision_trees/lc_buyer_preshipment.md",
+        }
 
-        with self.tree_md_path.open("r") as f:
-            mermaid_text = f.read()
+        if tree_name not in tree_paths:
+            raise ValueError(f"Unknown tree: {tree_name}")
 
-        tree = MermaidDecisionTreeParser().parse_mermaid_to_decision_tree(
-            md_text=mermaid_text,
-            tree_name=self.tree_name,
-            context=self.tree_context,
-        )
+        tree_path = Path(tree_paths[tree_name])
+        if not tree_path.exists():
+            raise FileNotFoundError(f"Tree file not found: {tree_path}")
+
+        tree_content = tree_path.read_text()
+        tree = self.parser.parse_mermaid_to_decision_tree(tree_content, tree_name, "")
+        self.trees[tree_name] = tree
         return tree
 
-    def process_client_input(
-        self, client_text: str, session: ChatSession | None = None
-    ) -> SellerPostShipmentLCDecision:
-        """
-        Process client input text, extract structured attributes,
-        and populate session facts instead of mutating tree nodes.
-        """
-        # Step 1: Extract client info using LLM + Pydantic model
-        client_info = self.extractor.extract(client_text, SellerPostShipmentLCDecision)
-
-        # Step 2: Store extracted attributes in session facts as boolean strings
-        all_nodes = self._get_all_nodes()
-        for node in all_nodes:
-            attr_name = node.attr_name
-            if attr_name and hasattr(client_info, attr_name):
-                value = getattr(client_info, attr_name)
-                if value is not None:
-                    # Store in session using boolean string representation
-                    # {"is_sight_lc": "true", "needs_financing": "false"}
-                    session.set_fact(attr_name, str(value).lower())
-
-        # Step 3: Mark initial processing as done and set starting position
-        session.initial_processing_done = True
-        if not session.current_node_id:
-            # Start from the first decision node (B), not the root (A) which is just a label
-            first_decision_node = None
-            for node in self._get_all_nodes():
-                if node.node_type == NodeType.DECISION:
-                    first_decision_node = node
-                    break
-            session.current_node_id = (
-                first_decision_node.node_id if first_decision_node else None
+    # STEP 1: Process client input with LLM
+    def process_client_input(self, client_text: str, session: ChatSession):
+        """Step 1: Analyze client input with LLM using ClientInfo model."""
+        try:
+            # Use LLM to extract client information
+            client_info = self.extractor.extract_with_context(
+                client_text,
+                ClientInfo,
+                "Determine if the client is a buyer, seller, or both from their description.",
             )
 
-        # Step 4: Return the structured client info for downstream use
-        return client_info
+            # Set role flags based on LLM result
+            if client_info.role == ClientRole.BUYER:
+                session.is_buyer = True
+                session.role_determined = True
+                self._setup_tree_sequence(session)
+            elif client_info.role == ClientRole.SELLER:
+                session.is_seller = True
+                session.role_determined = True
+                self._setup_tree_sequence(session)
+            # If client_info.role is None, role_determined stays False for clarification
 
-    def find_node_by_id(self, node_id: str) -> DecisionTreeNode | None:
-        """Find a node by its ID in the decision tree."""
+            # Update facts JSON
+            self._update_facts_json(session, client_text)
+            session.initial_processing_done = True
 
-        def search_nodes(nodes: list[DecisionTreeNode]) -> DecisionTreeNode | None:
-            for node in nodes:
-                if node.node_id == node_id:
-                    return node
-                # Search children recursively
-                found = search_nodes(node.children)
-                if found:
-                    return found
-            return None
+            return client_info
 
-        return search_nodes(self.decision_tree.nodes)
+        except Exception as e:
+            print(f"LLM analysis failed: {e}")
+            # LLM failed - will need role clarification
+            session.initial_processing_done = True
+            self._update_facts_json(session, client_text)
+            return ClientInfo(role=None)
 
-    def _get_all_nodes(self) -> list[DecisionTreeNode]:
-        """Get all nodes in the decision tree (flattened)."""
-        all_nodes = []
+    # STEP 2: Handle role determination with single question
+    def get_role_clarification_question(self, session: ChatSession) -> dict:
+        """Get role clarification question when role is unknown."""
+        return {
+            "type": "role_clarification",
+            "question": "What is the company's role?",
+            "options": [
+                {"text": "I am a Seller/Exporter", "value": "seller"},
+                {"text": "I am a Buyer/Importer", "value": "buyer"},
+                {"text": "I am Both Buyer and Seller", "value": "both"},
+            ],
+        }
 
-        def collect_nodes(nodes: list[DecisionTreeNode]):
-            for node in nodes:
-                all_nodes.append(node)
-                collect_nodes(node.children)
+    def process_role_response(self, session: ChatSession, role_value: str) -> bool:
+        """Process role selection and finalize role determination."""
+        if role_value == "seller":
+            session.is_seller = True
+        elif role_value == "buyer":
+            session.is_buyer = True
+        elif role_value == "both":
+            session.is_seller = True
+            session.is_buyer = True
+        else:
+            return False
 
-        collect_nodes(self.decision_tree.nodes)
-        return all_nodes
+        # Finalize role determination and start trees
+        session.role_determined = True
+        self._setup_tree_sequence(session)
+        self._update_facts_json(session)
+        return True
 
+    def _setup_tree_sequence(self, session: ChatSession):
+        """Set up tree sequence based on roles."""
+        trees = []
+        if session.is_seller:
+            trees.extend(["lc_seller_preshipment", "lc_seller_postshipment"])
+        if session.is_buyer:
+            trees.append("lc_buyer_preshipment")
+
+        session.tree_sequence = trees
+
+        if trees:
+            session.current_tree = trees[0]
+            self.decision_tree = self.load_tree_by_name(session.current_tree)
+            self._set_starting_node(session)
+
+    def _set_starting_node(self, session: ChatSession):
+        """Find and set the first decision node as starting point."""
+        if not self.decision_tree:
+            return
+
+        # Find first decision node
+        for root in self.decision_tree.nodes:
+            first_decision = self._find_first_decision_node(root)
+            if first_decision:
+                session.current_node_id = first_decision.node_id
+                return
+
+    def _find_first_decision_node(
+        self, node: DecisionTreeNode
+    ) -> DecisionTreeNode | None:
+        """Recursively find the first decision node."""
+        if node.node_type == NodeType.DECISION:
+            return node
+        for child in node.children:
+            result = self._find_first_decision_node(child)
+            if result:
+                return result
+        return None
+
+    # STEP 3: Navigate decision tree and update facts
     def get_next_question(self, session: ChatSession) -> dict | None:
-        """
-        Get the next question to ask based on current session state.
-        Returns None if we've reached an end node or there are no more questions.
-        """
-        if not session.current_node_id:
+        """Get the next question in the decision tree."""
+        if not session.current_node_id or not self.decision_tree:
             return None
 
         current_node = self.find_node_by_id(session.current_node_id)
         if not current_node:
             return None
 
-        # If current node is an end node, check if it has children (intermediate) or is final
-        if current_node.node_type == NodeType.END:
-            if len(current_node.children) == 0:
-                # This is a final end node - show recommendation
-                return {
-                    "type": "end",
-                    "node_id": current_node.node_id,
-                    "message": f"Recommendation: {current_node.node_id}",
-                    "is_final": True,
-                }
-            else:
-                # This is an intermediate step - automatically move to the next node
-                session.current_node_id = current_node.children[0].node_id
-                return self.get_next_question(session)  # Continue traversal
+        # Check for single-path auto-advancement (only one choice available)
+        if len(current_node.edges) == 1:
+            single_edge = current_node.edges[0]
+            edge_actions = single_edge.get("actions", {})
 
-        # For decision nodes, check if we have facts that can determine the path
-        if current_node.node_type == NodeType.DECISION:
-            # Case 1: Check if current node has an attribute and we have a matching fact
-            if current_node.attr_name and session.has_fact(current_node.attr_name):
-                fact_value = session.get_fact(current_node.attr_name)
+            # Auto-advance if there's only one path and no decision attributes
+            if not edge_actions or edge_actions.get("is_product"):
+                target_node = self.find_node_by_id(single_edge["target"])
+                if target_node:
+                    session.current_node_id = single_edge["target"]
+                    # Check if it's a product
+                    if edge_actions.get("is_product"):
+                        self._add_product(session, target_node.question)
+                    return self.get_next_question(session)  # Continue automatically
 
-                # Convert boolean fact to find the edge value to traverse next
-                edge_value = self._convert_fact_to_edge_value(
-                    current_node.attr_name, fact_value, current_node
-                )
-
-                if edge_value:
-                    # Find the edge that matches this converted value
-                    for edge in current_node.edges:
-                        if edge["value"] == edge_value:
-                            target_node = self.find_node_by_id(edge["target"])
-                            if target_node:
-                                session.current_node_id = target_node.node_id
-                                return self.get_next_question(session)
-
-            # Case 2: Check if any target nodes have attributes we have facts for
-            for edge in current_node.edges:
+        # Check for auto-advancement based on existing facts
+        for edge in current_node.edges:
+            edge_actions = edge.get("actions", {})
+            if self._can_auto_advance(session, edge_actions):
+                # Auto-advance
                 target_node = self.find_node_by_id(edge["target"])
-                if (
-                    target_node
-                    and target_node.attr_name
-                    and session.has_fact(target_node.attr_name)
-                ):
-                    fact_value = session.get_fact(target_node.attr_name)
-                    # For target node attributes, "true" means this path should be taken
-                    if str(fact_value).lower() == "true":
-                        session.current_node_id = target_node.node_id
-                        return self.get_next_question(
-                            session
-                        )  # Recursive call to continue
+                if target_node:
+                    session.current_node_id = edge["target"]
+                    # Check if it's a product
+                    if edge_actions.get("is_product"):
+                        self._add_product(session, target_node.question)
+                    return self.get_next_question(session)  # Continue
 
-        # We need to ask this question to the user
-        if current_node.node_type == NodeType.DECISION:
-            question_text = self._extract_question_text(current_node)
-            options = self.get_response_options(current_node)
+        # Handle end nodes
+        if current_node.node_type == NodeType.END:
+            if not current_node.children:
+                # Move to next tree or end
+                if self._advance_to_next_tree(session):
+                    return self.get_next_question(session)
+                else:
+                    return {
+                        "type": "end",
+                        "message": "Decision tree complete",
+                        "node_id": session.current_node_id,
+                    }
 
+        # Return question for user
+        if current_node.question and current_node.edges:
             return {
                 "type": "question",
-                "node_id": current_node.node_id,
-                "question": question_text,
-                "options": options,
-                "attr_name": current_node.attr_name,
-            }
-
-        return None
-
-    def get_response_options(self, node: DecisionTreeNode) -> list[dict] | None:
-        """Get available response options for a decision node based on edge labels."""
-        if not node.children:
-            return []
-
-        options = []
-
-        # First priority: Use edge labels from the decision tree
-        if node.edges:
-            for edge in node.edges:
-                options.append(
+                "question": current_node.question,
+                "options": [
                     {
                         "text": edge["label"],
                         "value": edge["value"],
                         "target": edge["target"],
                     }
-                )
-            return options
+                    for edge in current_node.edges
+                ],
+            }
 
-        else:
-            raise ValueError(f"Node {node.node_id} has children but no edges defined")
+        return None
 
     def process_user_response(
         self, session: ChatSession, response_value: str, target_node_id: str
     ) -> bool:
-        """
-        Process a user's response and update the session state.
-        Returns True if successful, False otherwise.
-        """
-        if not session.current_node_id:
-            return False
-
+        """Process user's response to a decision tree question."""
         current_node = self.find_node_by_id(session.current_node_id)
         if not current_node:
             return False
 
-        # Store the fact using appropriate attribute name
-        target_node = self.find_node_by_id(target_node_id)
+        # Find the selected edge
+        selected_edge = None
+        for edge in current_node.edges:
+            if edge["target"] == target_node_id:
+                selected_edge = edge
+                break
 
-        # Priority 1: Use current node's attribute name (e.g., "needs_financing" for question nodes)
-        if current_node.attr_name:
-            fact_key = current_node.attr_name
-            # Convert edge values to boolean strings for question nodes
-            if response_value in ["yes", "true"]:
-                session.set_fact(fact_key, "true")
-            elif response_value in ["no", "false"]:
-                session.set_fact(fact_key, "false")
+        if not selected_edge:
+            return False
+
+        # Update facts from edge actions
+        edge_actions = selected_edge.get("actions", {})
+        for attr_name, attr_value in edge_actions.items():
+            if attr_name == "is_product" and attr_value:
+                target_node = self.find_node_by_id(target_node_id)
+                if target_node and target_node.question:
+                    self._add_product(session, target_node.question)
             else:
-                session.set_fact(fact_key, response_value)
-        # Priority 2: Use target node's attribute name (e.g., "is_sight_lc" for LC type choices)
-        elif target_node and target_node.attr_name:
-            fact_key = target_node.attr_name
-            # For target node attributes, store as "true" since this path was chosen
-            session.set_fact(fact_key, "true")
-        # Fallback: Use generic key (should rarely happen with proper decision trees)
-        else:
-            fact_key = f"node_{current_node.node_id}_response"
-            session.set_fact(fact_key, response_value)
+                # Store decision attributes in facts
+                session.facts[attr_name] = str(attr_value).lower()
 
-        # Add to conversation history with proper display text
-        question_text = self._extract_question_text(current_node)
-
-        # Find the display text for this response value
-        display_text = response_value
-        if current_node.edges:
-            for edge in current_node.edges:
-                if edge["value"] == response_value:
-                    display_text = edge["label"]
-                    break
-
-        session.add_conversation_turn(
-            question_text, display_text, session.current_node_id
-        )
-
-        # Move to the target node
+        # Move to target node
         session.current_node_id = target_node_id
 
+        # Add to conversation history
+        session.add_conversation_turn(
+            current_node.question, selected_edge["label"], current_node.node_id
+        )
+
+        # Update facts JSON
+        self._update_facts_json(session)
         return True
 
-    def _extract_question_text(self, node: DecisionTreeNode) -> str:
-        """Extract a readable question from a decision node."""
-        # First priority: use the question from the decision tree
-        if node.question and node.question.strip():
-            return node.question.strip()
+    def _can_auto_advance(self, session: ChatSession, edge_actions: dict) -> bool:
+        """Check if we can auto-advance based on existing facts."""
+        for attr_name, attr_value in edge_actions.items():
+            if attr_name == "is_product":
+                continue
+            # Check if we have this fact
+            fact_value = session.facts.get(attr_name)
+            if fact_value == str(attr_value).lower():
+                return True
+        return False
 
-        # Second priority: generate from attribute name
-        if node.attr_name:
-            # Convert attribute name to readable question
-            attr_words = node.attr_name.replace("_", " ").title()
-            if node.attr_name.startswith("is_"):
-                return f"Is {attr_words[3:]} applicable?"
-            elif node.attr_name.startswith("needs_"):
-                return f"Do you need {attr_words[6:]}?"
-            elif node.attr_name.startswith("use_"):
-                return f"Will you use {attr_words[4:]}?"
-            else:
-                return f"What about {attr_words}?"
+    def _advance_to_next_tree(self, session: ChatSession) -> bool:
+        """Move to the next tree in the sequence."""
+        if not session.current_tree or not session.tree_sequence:
+            return False
 
-        # Fallback to generic question
-        return f"Please make a choice for {node.question}"
+        # Mark current tree as completed
+        if session.current_tree not in session.completed_trees:
+            session.completed_trees.append(session.current_tree)
 
-    def _find_next_node_by_answer(
-        self, current_node: DecisionTreeNode, answer: str
-    ) -> DecisionTreeNode | None:
-        """Find the next node based on the user's answer using the tree structure."""
-        if not current_node.children:
+        # Find next tree
+        try:
+            current_index = session.tree_sequence.index(session.current_tree)
+            if current_index + 1 < len(session.tree_sequence):
+                session.current_tree = session.tree_sequence[current_index + 1]
+                self.decision_tree = self.load_tree_by_name(session.current_tree)
+                self._set_starting_node(session)
+                self._update_facts_json(session)  # Update facts with new tree info
+                return True
+        except ValueError:
+            pass
+
+        return False
+
+    def _add_product(self, session: ChatSession, product_name: str):
+        """Add a product to the products list."""
+        if product_name not in session.products:
+            session.products.append(product_name)
+
+    def find_node_by_id(self, node_id: str) -> DecisionTreeNode | None:
+        """Find a node by its ID in the current tree."""
+        if not self.decision_tree:
             return None
 
-        # Normalize answer
-        normalized_answer = str(answer).lower().strip()
+        def search_node(node: DecisionTreeNode) -> DecisionTreeNode | None:
+            if node.node_id == node_id:
+                return node
+            for child in node.children:
+                result = search_node(child)
+                if result:
+                    return result
+            return None
 
-        # Use edge information to find the target - this is the only logic we need
-        if current_node.edges:
-            for edge in current_node.edges:
-                if edge["value"] == normalized_answer:
-                    return self.find_node_by_id(edge["target"])
-
-        # If no edge matches but we have children, this means the decision tree
-        # is missing edge labels - in this case we can't determine the path
-        print(
-            f"Warning: No edge found for answer '{answer}' on node {current_node.node_id}"
-        )
-        print(f"Available edges: {[edge['value'] for edge in current_node.edges]}")
-
+        for root in self.decision_tree.nodes:
+            result = search_node(root)
+            if result:
+                return result
         return None
 
-    def _convert_fact_to_edge_value(
-        self, attr_name: str, fact_value: str, node: DecisionTreeNode
-    ) -> str | None:
-        """
-        Convert a boolean fact value to the corresponding edge value for navigation.
-        """
-        fact_bool = str(fact_value).lower() == "true"
+    def _update_facts_json(self, session: ChatSession, original_input: str = None):
+        """Update the facts JSON with current session state."""
+        # Update client information with role details
+        role_names = []
+        if session.is_seller:
+            role_names.append("Seller")
+        if session.is_buyer:
+            role_names.append("Buyer")
 
-        # For nodes with their own attribute and edges (like financing questions)
-        if node.attr_name == attr_name and node.edges:
-            if fact_bool and len(node.edges) >= 1:
-                # For True, use first edge (usually "yes")
-                return node.edges[0]["value"]
-            elif not fact_bool and len(node.edges) >= 2:
-                # For False, use second edge (usually "no")
-                return node.edges[1]["value"]
+        session.client_information = {
+            "is_buyer": session.is_buyer,
+            "is_seller": session.is_seller,
+            "role_display": " & ".join(role_names) if role_names else "Unknown",
+            "role_determined": session.role_determined,
+        }
 
-        return None
+        if original_input:
+            session.client_information["original_input"] = original_input
+
+        # Add decision tree information if available
+        if session.role_determined:
+            session.client_information["current_decision_tree"] = (
+                session.current_tree or "None"
+            )
+            session.client_information["applicable_decision_trees"] = (
+                session.tree_sequence.copy() if session.tree_sequence else []
+            )
+
+            # Add progress information
+            if session.tree_sequence and session.current_tree:
+                try:
+                    current_index = session.tree_sequence.index(session.current_tree)
+                    total_trees = len(session.tree_sequence)
+                    session.client_information["tree_progress"] = (
+                        f"{current_index + 1}/{total_trees}"
+                    )
+                    session.client_information["completed_trees"] = (
+                        session.completed_trees.copy()
+                    )
+                except ValueError:
+                    session.client_information["tree_progress"] = "Unknown"

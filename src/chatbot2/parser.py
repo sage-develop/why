@@ -1,4 +1,5 @@
 import re
+import json
 from .models import DecisionTreeNode, NodeType, DecisionTree
 
 
@@ -23,7 +24,7 @@ class MermaidDecisionTreeParser:
             DecisionTree instance
         """
         # --- Node pattern ---
-        # Handle both: B{What type of LC<br/>are you using? | attr=lc_type} and C[Calculate financing gap<br/>with Sight LC formula | attr=is_sight_lc]
+        # Handle both: B{What type of LC are you using?} and C[Export Bill | attr={"is_product": true}]
         # Use DOTALL flag to handle multi-line nodes
         node_pattern = re.compile(r"(\w+)\s*([{\[])(.*?)([}\]])", re.DOTALL)
 
@@ -32,44 +33,39 @@ class MermaidDecisionTreeParser:
             node_id, bracket_open, content, bracket_close = match.groups()
             node_type = NodeType.DECISION if bracket_open == "{" else NodeType.END
 
-            # Extract question text and attribute if present in content
-            attr_name = None
             question_text = None
 
-            # Clean content and look for question and attribute
+            # Clean content and look for question text
             clean_content = (
                 content.replace("\n", " ").replace("\r", " ").replace("<br/>", " ")
             )
 
+            # Extract question text
             if " | attr=" in clean_content:
-                parts = clean_content.split(" | attr=")
-                if len(parts) >= 2:
-                    question_text = parts[0].strip()
-                    attr_name = parts[-1].strip()
+                parts = clean_content.split(" | attr=", 1)
+                question_text = parts[0].strip()
             else:
-                # If no attribute, the entire content is the question
                 question_text = clean_content.strip()
 
             nodes[node_id.strip()] = DecisionTreeNode(
                 node_id=node_id.strip(),
                 node_type=node_type,
                 tree_name=tree_name,
-                attr_name=attr_name,
                 question=question_text,
                 children=[],
             )
 
         # --- Edge pattern ---
-        # Handle both: "B -->|Sight LC| C" and "A --> B"
-        # Capture edge labels when present
+        # Handle: "B -->|Sight LC | attr={"lc_type": "sight"}| C" and "A --> B"
+        # Capture edge labels and actions
         edge_pattern = re.compile(
-            r"(\w+)(?:\s*[{\[].*?[}\]])?\s*-->\s*(?:\|([^|]*)\|\s*)?(\w+)(?:\s*[{\[].*?[}\]])?",
+            r"(\w+)(?:\s*[{\[].*?[}\]])?\s*-->\s*(?:\|([^|]*?)\s*(?:\|\s*attr=(\{[^}]*\})\s*)?\|\s*)?(\w+)(?:\s*[{\[].*?[}\]])?",
             re.MULTILINE | re.DOTALL,
         )
 
         incoming_edges: set[str] = set()
         for match in edge_pattern.finditer(md_text):
-            source_id, edge_label, target_id = match.groups()
+            source_id, edge_label, edge_actions_str, target_id = match.groups()
             source_id = source_id.strip()
             target_id = target_id.strip()
             edge_label = edge_label.strip() if edge_label else None
@@ -88,6 +84,38 @@ class MermaidDecisionTreeParser:
                         else target_id.lower()
                     ),
                 }
+
+                # Parse edge actions if present
+                edge_actions = {}
+                if edge_actions_str:
+                    try:
+                        edge_actions = json.loads(edge_actions_str.replace("'", '"'))
+                    except json.JSONDecodeError as e:
+                        print(
+                            f"Warning: Could not parse edge actions for {source_id} -> {target_id}: {edge_actions_str}"
+                        )
+
+                # Extract target node metadata and add to edge actions
+                target_node_match = re.search(
+                    rf"{target_id}\[([^\]]*attr=\{{[^}}]*\}}[^\]]*)\]", md_text
+                )
+                if target_node_match:
+                    content = target_node_match.group(1)
+                    if " | attr=" in content:
+                        parts = content.split(" | attr=", 1)
+                        json_str = parts[1].strip()
+                        if json_str.endswith("]"):
+                            json_str = json_str[:-1]
+                        try:
+                            target_metadata = json.loads(json_str.replace("'", '"'))
+                            edge_actions.update(target_metadata)
+                        except json.JSONDecodeError:
+                            pass
+
+                # Add actions to edge if any exist
+                if edge_actions:
+                    edge_info["actions"] = edge_actions
+
                 nodes[source_id].edges.append(edge_info)
 
                 incoming_edges.add(target_id)

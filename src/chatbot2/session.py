@@ -2,23 +2,29 @@ from pydantic import BaseModel, Field
 
 
 class ChatSession(BaseModel):
-    """
-    Stores dynamic client session info and conversation state.
-    Facts are stored as a mapping of node_id -> answer or value.
-    """
+    """Clean session model following the required facts JSON structure."""
 
-    facts: dict[str, str] = Field(default_factory=dict)
-    current_node_id: str | None = None
-    conversation_history: list[dict[str, str]] = Field(default_factory=list)
+    # Core session state
     initial_processing_done: bool = False
+    role_determined: bool = False
 
-    def set_fact(self, node_id: str, answer: str):
-        """Set a fact about a specific node."""
-        self.facts[node_id] = answer
+    # Client role flags (no complex role enum)
+    is_buyer: bool = False
+    is_seller: bool = False
 
-    def get_fact(self, node_id: str) -> str | None:
-        """Get a fact about a specific node."""
-        return self.facts.get(node_id)
+    # Facts JSON structure: {"client_information": {...}, "products": [], "facts": {...}}
+    client_information: dict = Field(default_factory=dict)
+    products: list[str] = Field(default_factory=list)
+    facts: dict[str, str] = Field(default_factory=dict)  # Only decision tree attributes
+
+    # Navigation
+    current_node_id: str | None = None
+    current_tree: str | None = None
+    tree_sequence: list[str] = Field(default_factory=list)
+    completed_trees: list[str] = Field(default_factory=list)
+
+    # History
+    conversation_history: list[dict[str, str]] = Field(default_factory=list)
 
     def add_conversation_turn(self, question: str, answer: str, node_id: str):
         """Add a conversation turn to history."""
@@ -26,20 +32,10 @@ class ChatSession(BaseModel):
             {"question": question, "answer": answer, "node_id": node_id}
         )
 
-    def has_fact(self, node_id: str) -> bool:
-        """Check if we have a fact for a specific node."""
-        return node_id in self.facts
-
-    def reset_conversation(self):
-        """Reset the conversation state but keep extracted facts."""
-        self.current_node_id = None
-        self.conversation_history = []
-        # Keep initial facts from document processing
-
     def to_json(self):
+        """Return the clean facts JSON structure as requested."""
         return {
+            "client_information": self.client_information,
+            "products": self.products,
             "facts": self.facts,
-            "current_node": self.current_node_id,
-            "conversation_history": self.conversation_history,
-            "initial_processing_done": self.initial_processing_done,
         }
