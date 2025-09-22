@@ -7,23 +7,25 @@ flowchart TD
     RiskConcern -- Yes --> LCConfirm["Letter of Credit Confirmation"]
     RiskConcern -- No --> CheckMiddleman@{ label: "Is seller a middleman who doesn't make goods?" }
     LCConfirm --> CheckMiddleman
-    CheckMiddleman -- Yes --> TransferableCheck{"Is LC transferable?"}
+    CheckMiddleman -- Yes, is a middleman --> TransferableCheck{"Is LC transferable?"}
     TransferableCheck -- Yes --> WantTransfer{"Want to transfer LC to supplier?"}
     WantTransfer -- Yes --> LCTransfer["Letter of Credit Transferring"]
     WantTransfer -- No --> BackToBackCheck{"Does the seller need more control OR different LC terms (amounts, dates, documents)?"}
     TransferableCheck -- No --> BackToBackCheck
     LCTransfer --> End1["Flow ends here - Middleman transferred LC"]
-    CheckMiddleman -- No --> CheckAssign{"Want to redirect payments to third parties?"}
+    CheckMiddleman -- No, produce own goods --> CheckAssign{"Want to redirect payments to third parties?"}
     BackToBackCheck -- Yes --> BackToBackLC["Back-to-Back LC"]
     BackToBackCheck -- No --> CheckAssign
     BackToBackLC --> CheckAssign
     CheckAssign -- Yes --> AssignProceeds["Assignment of Proceeds under Letter of Credit"]
     CheckAssign -- No --> CheckPacking{"Need pre-shipment working capital?"}
     AssignProceeds --> CheckPacking
-    CheckPacking -- Yes --> ECRCheck{"Is government export credit program available AND (want to expand exports OR reduce financing costs)?"}
+    CheckPacking -- Yes --> ECRAvailable{"Is a government Export Credit Refinancing program available for this transaction?"}
     CheckPacking -- No --> ContinueFlow@{ label: "Continue to post-shipment<br style=\"--tw-scale-x:\">products or complete transaction" }
-    ECRCheck -- Yes --> ECR["Export Credit Refinancing"]
-    ECRCheck -- No --> PackingCredit["Packing Credit for Exporters"]
+    ECRAvailable -- No --> PackingCredit["Packing Credit for Exporters"]
+    ECRAvailable -- Yes --> ECRWant{"Does the client want to use the program (cheaper cost but with eligibility/paperwork)?"}
+    ECRWant -- Yes --> ECR["Export Credit Refinancing Pre Ship"]
+    ECRWant -- No --> PackingCredit
     ECR --> ContinueFlow
     PackingCredit --> ContinueFlow
 
@@ -36,9 +38,10 @@ flowchart TD
      BackToBackCheck:::newDecisionBox
      BackToBackLC:::newProductBox
      AssignProceeds:::productBox
-     ECRCheck:::newDecisionBox
-     ECR:::newProductBox
+     ECRAvailable:::newDecisionBox
      PackingCredit:::productBox
+     ECRWant:::newDecisionBox
+     ECR:::newProductBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
     classDef newProductBox fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#c62828
     classDef newDecisionBox fill:#fce4ec,stroke:#d81b60,stroke-width:2px,color:#d81b60
@@ -54,7 +57,8 @@ flowchart TD
 6. **Back-to-Back LC Check**: If not transferring or LC not transferable, assess if seller needs more control or different LC terms
 7. **Assignment Check**: Check if seller wants to redirect payments to third parties
 8. **Working Capital Check**: Determine if seller needs pre-shipment working capital
-9. **ECR Eligibility**: For working capital needs, check if government export credit program is available and seller wants to expand exports or reduce costs
+9. **ECR Program Availability**: For working capital needs, check if a government Export Credit Refinancing program is available for this transaction
+10. **ECR Program Usage**: If available, determine if client wants to use the program (cheaper cost but with eligibility/paperwork requirements)
 
 ## Product Flow Conclusions
 
@@ -82,19 +86,24 @@ flowchart TD
   - Allows middleman to maintain control over supplier relationship
   - Enables customization of terms for supplier LC
 
-### Export Credit Refinancing (ECR)
+### Export Credit Refinancing Pre Ship
 
-- **Product Type**: A government-subsidized financing for sellers (Pre-shipment)
+- **Product Type**: A government-subsidized financing for sellers/exporters to produce goods before shipping (Pre-shipment)
 - **How It Works**:
-  - Central bank/export agency provides cheap funds to commercial banks
-  - Commercial banks pass on cheaper rates to sellers
-  - "Government helps banks so banks help sellers"
+  - Central bank provides low interest rate loans to companies that export "local content" via local banks
+  - Commercial banks pass on cheaper rates to sellers/exporters
+  - Financing is backed by export orders
+  - "Government helps banks so banks help sellers/exporters"
 - **Use When**:
   - Government export credit program is available
   - Seller wants to expand exports but concerned about financing costs
   - Seller wants to reduce interest rates to make export deal viable
+  - Need financing to produce goods before shipping
 - **Benefits**:
-  - Cheaper credit for sellers compared to standard rates
+  - Cheaper credit for sellers/exporters compared to standard rates
   - Government backing reduces financing costs
   - Supports export expansion and competitiveness
-- **Decision Point**: Check if both government program availability and seller's expansion/cost concerns align
+  - Local government policy/scheme to encourage/grow local companies to export
+- **Decision Points**:
+  - Step 1: Check if government Export Credit Refinancing program is available for the transaction
+  - Step 2: If available, check if client wants to use the program despite eligibility and paperwork requirements

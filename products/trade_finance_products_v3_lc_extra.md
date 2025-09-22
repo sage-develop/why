@@ -28,23 +28,27 @@ New Trade LC Compatible Products
 - Use when the Seller needs more control.
 - Use when the LC terms need to be different (amounts, dates, documents)
 
-#### ECR - Export Credit Refinancing
+#### ECR - Export Credit Refinancing Pre Ship
 
-A financing (via central bank to commercial bank) for Sellers Pre-shipment.
+- LC/Collection/OA Sellers pre-shipment
 
-- A government-subsidized financing for sellers.
-- If government export credit program available, check 1. If the seller want to expand exports but concerned about financing costs.
+- A financing for sellers/exporters to produce goods before shipping, backed by export orders.
+- This is a local government policy/scheme to encourage/grow local companies to export by providing low interest rate loans.
 
-2. If the seller wants to reduce ECR interest rate to make the export deal viable.
+- Central bank provides low interest rate loans to companies that export "local content" via local banks.
 
-- If the seller needs one or both, recommend Export Credit Refinancing.
+#### Seller - Post-shipment
 
-- Central bank/export agency provides cheap funds to commercial banks.
-- Commercial banks pass on cheaper rates to sellers
+#### Export Credit Refinancing Post
 
-- Central bank (or export agency) provides refinancing to commercial banks that give credit to sellers.
-- Central bank refinances local banks.
-- Cheaper credit for sellers.
-- “Government helps banks so banks help sellers.”
+- LC/Collection/OA Seller post-shipment
+
+- A financing for sellers/exporters provided after goods are shipped and documents are submitted.
+- This is a local government policy/scheme to encourage/grow local companies to export by providing low interest rate loans.
+
+- Central bank provides low interest rate loans to companies that export "local content" via local banks.
+- Provided after goods are shipped and documents are submitted.
 
 #### Transferrable LC = LC Transferring
+
+#### Shipping Guarantee = Shipping Guarantee Issuance
