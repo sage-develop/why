@@ -2,10 +2,10 @@
 
 ```mermaid
 flowchart TD
-    A(["Step 1 Manufacturing Buyer Collection"]) --> B@{ label: "The original B/L arrived at buyer's bank<br/>" }
-    B --> D["Inward Bill for Collection<br/>feat={is_product: true}"]
+    Start(["Step 1 Manufacturing Buyer Collection"]) --> Q1@{ label: "The original B/L arrived at buyer's bank<br/>" }
+    Q1 --> P1["Inward Bill for Collection<br/>feat={is_product: true}"]
 
-    B@{ shape: diamond}
-    D:::productBox
+    Q1@{ shape: diamond}
+    P1:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
 ```
