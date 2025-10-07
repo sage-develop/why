@@ -2,9 +2,9 @@
 
 Create a Mermaid decision tree for Trade Finance Purchase by asking the following questions
 
-- Do you generally finance your purchases?
+- Does the client generally finance their purchases?
   If no, then "No opportunity"
-- Do you have a financing gap based on Cash Conversion Cycle?
+- Does the client have a financing gap based on Cash Conversion Cycle?
   If no, then "Not eligible for Purchase Financing"
 - Who has the title to the goods on the B/L?
   If the answer if Bank, then Opportunity: Trust Receipt Loan, P/N under Letter of Credit, Invoice Financing
