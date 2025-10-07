@@ -1,12 +1,18 @@
 ## Prompt
 
-Create a Mermaid decision tree for Trade Finance Collections by asking the following questions?
+Create a Mermaid decision tree for Trade Finance Collections by
+starting with "Start: Trade Purchase Financing"
+then ask the following questions:
 
-- Do the goods usually arrive before the documents?
-  If not, then Opportunity: Inward Bill for Collection.
-- Does the buyer want to claim goods immediately after goods arrive?
-  If not, then Opportunity: Inward Bill for Collection.
-  If the answer is yes to both, then Opportunity: Shipping Guarantee
+- Do you have a financing gap based on Cash Conversion Cycle?
+  If no, "Proceed without financing"
+  If yes, then "Opportunity: P/N under Bill for Collection - Buyer / Invoice Financing".
+- Who has title to the goods on the B/L?
+  If it's the bank, then "Endorsement Services".
+  If it's the buyer, "Use B/L directly to claim goods".
+- Was Shipping Guarantee Issuance used earlier?
+  If yes, "Exchange B/L for Shipping Guarantee to complete flow" then "Trade Collection transaction completed successfully".
+  If no, "Trade Collection transaction completed successfully".
 
 ## Decision Tree
 
@@ -14,10 +20,21 @@ Create a Mermaid decision tree for Trade Finance Collections by asking the follo
 %% Trade Finance Collection Decision Tree
 
 flowchart TD
-    Start[Start: Collection] --> A{Do the goods usually arrive before the documents?}
-    A -->|No| B[Opportunity: Inward Bill for Collection]
-    A -->|Yes| C{Does the buyer want to claim goods immediately after goods arrive?}
-    C -->|No| B
-    C -->|Yes| D[Opportunity: Shipping Guarantee]
-    D --> B
+   J{"Do you have a financing gap based on Cash Conversion Cycle?"} -- Yes --> K["Opportunity: P/N under Bill for Collection - Buyer / Invoice Financing"]
+   J -- No --> L["Proceed without financing"]
+   K --> M{"Who has title to the goods on the B/L?"}
+   L --> M
+   M -- The buyer --> N["Use B/L directly to claim goods"]
+   M -- The bank --> O["Endorsement Services"]
+   O --> P{"Was Shipping Guarantee Issuance used earlier?"}
+   N --> P
+   P -- Yes --> Q["Exchange B/L for Shipping Guarantee to complete flow"]
+   P -- No --> R["Trade Collection transaction completed successfully"]
+   Q --> R
+   A(["Start: Trade Purchase Financing"]) --> n1@{ label: "Context: Now, let's explore about purchase financing under Trade Collections" }
+   n1 --> J
+
+
+   K:::productBox
+   classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
 ```
