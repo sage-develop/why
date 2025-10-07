@@ -10,7 +10,7 @@ Create a non-product decision tree as mermaid code inside non_trade_products.md.
 flowchart TD
     Start(["Start: Do you need to cover a non-trade payment<br>(e.g., salaries, rent, utilities)?"]) -- No --> End0["Outside scope / no overdraft need"]
     Start -- Yes --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
-    Context --> Q1{"Does the client have sufficient<br>cash available now?"}
+    Context --> Q1{"Does the client have sufficient funds for their business needs?"}
     Q1 -- Yes --> End1["No non-trade finaning opportunity"]
     Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
     Q2 -- "Operating expenses<br>(e.g., salaries, rent, utilities)" --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
