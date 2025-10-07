@@ -18,13 +18,14 @@ Follow these steps:
 
 3. Next question: "Does the buyer want to preserve cash flow?"
    - If Yes → "Overdraft".
-   - If No → "Defer payment or use existing funds".
+   - If No → "No opportunity".
 
 ## Decision tree
 
 ```mermaid
 flowchart TD
-   Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Q1{"Does buyer have sufficient<br>cash for payment?"}
+   Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: Client needs to make<br>non-trade payments but lacks<br>sufficient cash on hand"]
+   Context --> Q1{"Does buyer have sufficient<br>cash for payment?"}
    Q1 -- Yes --> End1["Make payment with<br>existing funds"]
    Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
    Q2 -- Equipment/Services<br>down payment --> Q3{"Is this an<br>urgent payment?"}
@@ -32,5 +33,5 @@ flowchart TD
    Q3 -- Yes --> P1["Opportunity: Overdraft"]
    Q3 -- No --> Q4
    Q4 -- Yes --> P2["Opportunity: Overdraft"]
-   Q4 -- No --> End2["Defer payment or use<br>existing funds"]
+   Q4 -- No --> End2["No opportunity"]
 ```

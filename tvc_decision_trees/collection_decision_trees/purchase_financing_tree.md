@@ -20,21 +20,15 @@ then ask the following questions:
 %% Trade Finance Collection Decision Tree
 
 flowchart TD
-   J{"Do you have a financing gap based on Cash Conversion Cycle?"} -- Yes --> K["Opportunity: P/N under Bill for Collection / Invoice Financing"]
-   J -- No --> L["Proceed without financing"]
-   K --> M{"Who has title to the goods?"}
-   L --> M
-   M -- The buyer --> N["Use B/L directly to claim goods"]
-   M -- The bank --> O["Endorsement Services"]
-   O --> P{"Was Shipping Guarantee Issuance used earlier?"}
-   N --> P
-   P -- Yes --> Q["Exchange B/L for Shipping Guarantee to complete flow"]
-   P -- No --> R["Trade Collection transaction completed successfully"]
-   Q --> R
-   A(["Start: Trade Purchase Financing"]) --> n1@{ label: "Context: Now, let's explore about purchase financing under Trade Collections" }
-   n1 --> J
+    J{"Do you have a financing gap based on Cash Conversion Cycle?"} -- Yes --> K["Opportunity: <br>P/N under Bill for Collection / Invoice Financing"]
+    J -- No --> L["Proceed without financing"]
+    K --> M{"Who has title to the goods on the B/L?"}
+    L --> M
+    M -- The buyer --> N["Use B/L directly to claim goods"]
+    M -- The bank --> O["Opportunity: Endorsement Services"]
+    A(["Start: Trade Purchase Financing"]) --> n1@{ label: "Context: Now, let's explore about purchase financing under Trade Collections" }
+    n1 --> J
 
-
-   K:::productBox
-   classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+     K:::productBox
+    classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
 ```
