@@ -1,7 +1,7 @@
 ## Prompt
 
 Create a Mermaid decision tree for Trade Finance Open Account by asking
-Start with "Start: OA Decision Tree"
+Start with "Start: Open Account Decision Tree"
 Then next level has 2 nodes in parallel
 Purchase Financing tree
 Payment Services tree
@@ -13,7 +13,7 @@ Payment Services tree
 
 flowchart TD
 A[Start: Trade Finance OA Decision Tree]
-A --> B[Context: You are making purchases under open account terms.]
+A --> B[Context: The client is making purchases under Open Account terms.]
 B --> C[Purchase Financing tree]
 B --> E[Payment Services tree]
 ```
