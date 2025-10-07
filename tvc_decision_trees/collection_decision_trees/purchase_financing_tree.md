@@ -6,8 +6,8 @@ then ask the following questions:
 
 - Do you have a financing gap based on Cash Conversion Cycle?
   If no, "Proceed without financing"
-  If yes, then "Opportunity: P/N under Bill for Collection - Buyer / Invoice Financing".
-- Who has title to the goods on the B/L?
+  If yes, then "Opportunity: P/N under Bill for Collection / Invoice Financing".
+- Who has title to the goods?
   If it's the bank, then "Endorsement Services".
   If it's the buyer, "Use B/L directly to claim goods".
 - Was Shipping Guarantee Issuance used earlier?
@@ -20,9 +20,9 @@ then ask the following questions:
 %% Trade Finance Collection Decision Tree
 
 flowchart TD
-   J{"Do you have a financing gap based on Cash Conversion Cycle?"} -- Yes --> K["Opportunity: P/N under Bill for Collection - Buyer / Invoice Financing"]
+   J{"Do you have a financing gap based on Cash Conversion Cycle?"} -- Yes --> K["Opportunity: P/N under Bill for Collection / Invoice Financing"]
    J -- No --> L["Proceed without financing"]
-   K --> M{"Who has title to the goods on the B/L?"}
+   K --> M{"Who has title to the goods?"}
    L --> M
    M -- The buyer --> N["Use B/L directly to claim goods"]
    M -- The bank --> O["Endorsement Services"]

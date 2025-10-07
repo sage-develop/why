@@ -12,9 +12,9 @@ Create a Mermaid decision tree for Trade Finance Letter of Credit Shipping Guara
 ## Decision Tree
 
 ```mermaid
-%% LC Shipping Guarantee
+%% Letter of Credit Shipping Guarantee
 flowchart TD
-    Start[Start: LC Shipping Guarantee] --> A[Context: Now, goods have arrived in your country. I will explore with you on how to claims the goods under LC]
+    Start[Start: Letter of Credit Shipping Guarantee] --> A[Context: Now, goods have arrived in your country. I will explore with you on how to claims the goods under Letter of Credit]
     A --> B{Do the goods usually arrive before the documents}
     B -->|No| C[No Opportunity]
     B -->|Yes| D{Does the buyer want to claim the goods immediately upon arrival?}
