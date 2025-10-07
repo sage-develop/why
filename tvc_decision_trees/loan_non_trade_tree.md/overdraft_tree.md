@@ -24,14 +24,19 @@ Follow these steps:
 
 ```mermaid
 flowchart TD
-   Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs unrelated to trade."]
-   Context --> Q1{"Does the buyer have sufficient<br>cash available for payment?"}
-   Q1 -- Yes --> End1["Make payment with<br>existing funds"]
-   Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
-   Q2 -- Equipment/Services<br>down payment --> Q3{"Is this an<br>urgent payment?"}
-   Q2 -- Other business<br>payments --> Q4{"Does the buyer want to<br>preserve cash flow?"}
-   Q3 -- Yes --> P1["Opportunity: Overdraft"]
-   Q3 -- No --> Q4
-   Q4 -- Yes --> P2["Opportunity: Overdraft"]
-   Q4 -- No --> End2["No opportunity"]
+    Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client faces cash flow gaps or urgent funding needs<br>not related to import/export trade."]
+    Context --> Q1{"Does the buyer have sufficient<br>cash available for payment?"}
+    Q1 -- Yes --> End1["Make payment with<br>existing funds"]
+    Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
+    Q2 -- Equipment / Services<br>Down Payment --> Q3{"Is this payment time-sensitive<br>or contractually urgent?"}
+    Q2 -- "Operating Expenses<br>(e.g. rent, utilities, salaries)" --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
+    Q2 -- Tax or Government<br>Obligations --> P1["Opportunity: Overdraft<br>(short-term compliance payment)"]
+    Q2 -- Debt Repayment /<br>Installment Due --> Q5{"Is refinancing available or preferred?"}
+    Q2 -- "Other Business Needs<br>(e.g. insurance, maintenance)" --> Q4
+    Q3 -- Yes --> P1a["Opportunity: Overdraft<br>(bridge urgent payment)"]
+    Q3 -- No --> Q4
+    Q4 -- Yes --> P2["Opportunity: Overdraft<br>(cash flow preservation)"]
+    Q4 -- No --> End2["No opportunity<br>"]
+    Q5 -- Yes --> End3["Consider refinancing<br>or restructuring"]
+    Q5 -- No --> P1b["Opportunity: Overdraft<br>(bridge short-term repayment)"]
 ```

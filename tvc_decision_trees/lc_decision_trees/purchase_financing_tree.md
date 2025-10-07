@@ -16,10 +16,10 @@ Create a Mermaid decision tree for Trade Finance Purchase by asking the followin
 ```mermaid
 %% Trade Finance Purchase Financing Decision Tree
 flowchart TD
-    Start[Start: Trade Purchase Financing] --> Context[Context: Now, let's explore about purchase financing under Letter of Credit]
-    Context -->A{Do you generally finance your purchases?}
+    Start[Start: Trade Purchase Financing] --> Context[Context: Client is buying goods and may need<br>financing to pay suppliers before<br>receiving payment from their customers]
+    Context -->A{Does the client generally finance their purchases?}
     A -->|No| B[No opportunity]
-    A -->|Yes| C{Do you have a financing gap based on Cash Conversion Cycle?}
+    A -->|Yes| C{Does the client have a financing gap based on Cash Conversion Cycle?}
 
     C -->|No| D[Not eligible for Purchase Financing]
     C -->|Yes| E{Who has title to the goods?}
