@@ -8,17 +8,27 @@ Create a non-product decision tree as mermaid code inside non_trade_products.md.
 
 ```mermaid
 flowchart TD
-    Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
+    Start(["Start: Do you need to cover a non-trade payment<br>(e.g., salaries, rent, utilities)?"]) -- No --> End0["Outside scope / no overdraft need"]
+    Start -- Yes --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
+    Context --> Q1{"Does the client have sufficient<br>cash available now?"}
+    Q1 -- Yes --> End1["No non-trade finaning opportunity"]
+    Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
+    Q2 -- "Operating expenses<br>(e.g., salaries, rent, utilities)" --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
+    Q2 -- "Equipment /<br>services down payment /<br>other business needs <br>(e.g., insurance, maintenance)" --> Q3{"Is this payment urgent?"}
+    Q2 -- Tax or government<br>obligations --> OD1["Opportunity: Overdraft<br>(mandatory compliance payment)"]
+    Q2 -- Debt repayment /<br>installment due --> Q5{"Is refinancing available or preferred?"}
+    Q3 -- Yes --> OD3["Opportunity: Overdraft<br>(bridge urgent payment)"]
+    Q3 -- No --> Q4
+    Q4 -- Yes --> OD2["Opportunity: Overdraft<br>(cash-flow preservation)"]
+    Q4 -- No --> End2["No non-trade finaning opportunity"]
+    Q5 -- Yes --> End3["Consider refinancing or restructuring"]
+    Q5 -- No --> OD5["Opportunity: Overdraft<br>(bridge short-term repayment)"]
 
-    Context --> Q0{"Does the client have<br>sufficient funds for<br>their business needs?"}
-    Q0 -- Yes --> NoLoan["No financing needed"]
-    Q0 -- No --> Q1{"Does the client need<br>flexible access to funds<br>for cash flow gaps?"}
-    Q1 -- Yes --> Q2{"Do they prefer no fixed<br>repayment schedule?"}
-    Q1 -- No --> NotSuitable1["Consider: Term Loan<br>for fixed amounts"]
-    Q2 -- Yes --> Warning{"Warning: Will they avoid<br>excessive or long-term<br>usage to prevent high costs?"}
-    Q2 -- No --> NotSuitable2["Opportunity: Term Loan<br>with structured payments"]
-    Warning -- Yes --> Overdraft["Opportunity: Overdraft<br>✓ Flexible credit facility<br>✓ Interest on used amount only<br>✓ No fixed repayment schedule"]
-    Warning -- No --> Caution["Caution: Overdraft may become<br>expensive - consider alternatives<br>or usage guidelines"]
+     OD1:::Sky
+     OD3:::Sky
+     OD2:::Sky
+     OD5:::Sky
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
 ```
 
 ## Decision Logic

@@ -25,18 +25,13 @@ Follow these steps:
 ```mermaid
 flowchart TD
     Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
-    Context --> Q1{"Does the buyer have sufficient<br>cash available for payment?"}
-    Q1 -- Yes --> End1["Make payment with<br>existing funds"]
-    Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
-    Q2 -- Equipment / Services<br>Down Payment --> Q3{"Is this payment time-sensitive<br>or contractually urgent?"}
-    Q2 -- "Operating Expenses<br>(e.g. rent, utilities, salaries)" --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
-    Q2 -- Tax or Government<br>Obligations --> P1["Opportunity: Overdraft<br>(short-term compliance payment)"]
-    Q2 -- Debt Repayment /<br>Installment Due --> Q5{"Is refinancing available or preferred?"}
-    Q2 -- "Other Business Needs<br>(e.g. insurance, maintenance)" --> Q4
-    Q3 -- Yes --> P1a["Opportunity: Overdraft<br>(bridge urgent payment)"]
-    Q3 -- No --> Q4
-    Q4 -- Yes --> P2["Opportunity: Overdraft<br>(cash flow preservation)"]
-    Q4 -- No --> End2["No opportunity<br>"]
-    Q5 -- Yes --> End3["Consider refinancing<br>or restructuring"]
-    Q5 -- No --> P1b["Opportunity: Overdraft<br>(bridge short-term repayment)"]
+    Context --> Q0{"Does the client have<br>sufficient funds for<br>their business needs?"}
+    Q0 -- Yes --> NoLoan["No non-trade financing opportunity"]
+    Q0 -- No --> Q1{"Does the client need<br>flexible access to funds<br>for cash flow gaps?"}
+    Q1 -- Yes --> Q2{"Do they prefer no fixed<br>repayment schedule?"}
+    Q1 -- No --> NotSuitable1["Opportunity: Term Loan<br>"]
+    Q2 -- Yes --> Warning{"Warning: Will they avoid<br>excessive or long-term<br>usage to prevent high costs?"}
+    Q2 -- No --> NotSuitable2["Opportunity: Term Loan<br>"]
+    Warning -- Yes --> Overdraft["Opportunity: Overdraft<br>✓ Flexible credit facility<br>✓ Interest on used amount only<br>✓ No fixed repayment schedule"]
+    Warning -- No --> Caution["Caution: Overdraft may become<br>expensive - consider alternatives<br>or usage guidelines"]
 ```
