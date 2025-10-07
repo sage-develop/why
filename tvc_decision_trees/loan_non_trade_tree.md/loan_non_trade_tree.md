@@ -8,7 +8,7 @@ Create a non-product decision tree as mermaid code inside non_trade_products.md.
 
 ```mermaid
 flowchart TD
-    Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs unrelated to trade."]
+    Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
 
     Context --> Q0{"Does the client have<br>sufficient funds for<br>their business needs?"}
     Q0 -- Yes --> NoLoan["No financing needed"]
