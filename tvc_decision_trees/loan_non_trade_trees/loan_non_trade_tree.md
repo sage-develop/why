@@ -3,22 +3,26 @@
 Create a Mermaid decision tree diagram for Non-Trade Transactions (Overdraft).
 Follow these steps:
 
-1. Start: "Non-Trade Transaction (Overdraft)".  
-   → Ask: "Does the buyer have sufficient cash for payment?"
+1. Start: "Non-Trade Transaction (Overdraft)" with context about cash flow gaps and urgent funding needs.
 
-   - If Yes → "Make payment with existing funds".
-   - If No → continue.
+2. Ask: "Does the client have sufficient funds for their business needs?"
 
-2. If No cash: Ask "What type of non-trade payment is needed?"
+   - If Yes → "No non-trade financing opportunity"
+   - If No → continue
 
-   - If Equipment/Services down payment → Ask: "Is this an urgent payment?"
-     - If Yes → "Overdraft".
-     - If No → Continue to the next question.
-   - If Other business payments → continue to next question.
+3. Ask: "Does the client need flexible access to funds for cash flow gaps?"
 
-3. Next question: "Does the buyer want to preserve cash flow?"
-   - If Yes → "Overdraft".
-   - If No → "No opportunity".
+   - If Yes → continue
+   - If No → "Opportunity: Term Loan"
+
+4. Ask: "Do they prefer no fixed repayment schedule?"
+
+   - If Yes → Warning about usage
+   - If No → "Opportunity: Term Loan"
+
+5. Warning: "Will they avoid excessive or long-term usage to prevent high costs?"
+   - If Yes → "Opportunity: Overdraft"
+   - If No → "Caution: Overdraft may become expensive"
 
 ## Decision tree
 

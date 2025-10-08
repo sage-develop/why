@@ -2,7 +2,7 @@
 
 # Prompt
 
-Create a non-product decision tree as mermaid code inside non_trade_products.md. Only see Overdraft bullet points in non_trade_product.md file
+Create a non-product decision tree as mermaid code inside this file. Only see OD - Overdraft key points in this 'loan_non_trade_tree.md' file
 
 ## Decision Flow
 
