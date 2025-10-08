@@ -20,7 +20,7 @@ flowchart TD
     Q3 -- No --> Q4
     Q4 -- Yes --> OD2["Opportunity: Overdraft<br>(cash-flow preservation)"]
     Q4 -- No --> End2["No non-trade financing opportunity"]
-    Q5 -- Yes --> End3["Opportunity: refinancing or restructuring"]
+    Q5 -- Yes --> End3["Opportunity: Refinancing or restructuring"]
     Q5 -- No --> OD5["Opportunity: Overdraft<br>(bridge short-term repayment)"]
 
     Start@{ shape: stadium}
