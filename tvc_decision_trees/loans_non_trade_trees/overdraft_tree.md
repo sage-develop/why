@@ -8,26 +8,25 @@ Create a non-product decision tree as mermaid code inside this file. Only see OD
 
 ```mermaid
 flowchart TD
-    Start@{ label: "Start: Non-Trade Transaction<br style=\"--tw-scale-x:\">(Overdraft Ver.1)" } -- <br> --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
-    Context --> Q1{"Does the client have sufficient funds for their business needs?"}
-    Q1 -- Yes --> End1["No non-trade financing opportunity"]
-    Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
-    Q2 -- "Operating expenses<br>(e.g., salaries, rent, utilities)" --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
-    Q2 -- "Equipment /<br>services down payment /<br>other business needs <br>(e.g., insurance, maintenance)" --> Q3{"Is this payment urgent?"}
+    Start(["Start: Non-Trade Transaction<br>(Overdraft Ver.1)"]) --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
+    Context --> Q1{"Does the client need financing for their business needs?"}
+    Q1 -- No --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
+    Q4 -- Yes --> OD2A["Opportunity: Overdraft<br>(cash-flow preservation for operations)"]
+    Q4 -- No --> End1["No non-trade financing opportunity"]
+    Q1 -- Yes --> Q2{"What type of non-trade<br>payment is needed?"}
+    Q2 -- "Operating expenses<br>(e.g., salaries, rent, utilities)" --> OD2B["Opportunity: Overdraft<br>(cash-flow preservation for expenses)"]
+    Q2 -- "Equipment /<br>services down payment /<br>other business needs<br>(e.g., insurance, maintenance)" --> Q3{"Is this payment urgent?"}
     Q2 -- Tax or government<br>obligations --> OD1["Opportunity: Overdraft<br>(mandatory compliance payment)"]
-    Q2 -- Debt repayment /<br>installment due --> Q5{"Is refinancing available or preferred?"}
-    Q3 -- Yes --> OD3["Opportunity: Overdraft<br>(bridge urgent payment)"]
-    Q3 -- No --> Q4
-    Q4 -- Yes --> OD2["Opportunity: Overdraft<br>(cash-flow preservation)"]
-    Q4 -- No --> End2["No non-trade financing opportunity"]
-    Q5 -- Yes --> End3["Opportunity: Refinancing or restructuring"]
-    Q5 -- No --> OD5["Opportunity: Overdraft<br>(bridge short-term repayment)"]
+    Q2 -- Debt repayment /<br>installment due --> OD5["Opportunity: Overdraft<br>(bridge short-term repayment)"]
+    Q3 -- Yes --> OD3A["Opportunity: Overdraft<br>(bridge urgent payment)"]
+    Q3 -- No --> OD2C@{ label: "<span style=\"color:\">No non-trade financing opportunity</span>" }
 
-    Start@{ shape: stadium}
+    OD2C@{ shape: rect}
+     OD2A:::Sky
+     OD2B:::Sky
      OD1:::Sky
-     OD3:::Sky
-     OD2:::Sky
      OD5:::Sky
+     OD3A:::Sky
     classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
 ```
 

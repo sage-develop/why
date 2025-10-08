@@ -20,19 +20,33 @@ then ask the following questions:
 %% Trade Finance Collection Decision Tree
 
 flowchart TD
-    J{"Does the client have a financing gap based on Cash Conversion Cycle?"} -- Yes --> K["Opportunity: <br>P/N under Bill for Collection / Invoice Financing"]
-    J -- No --> L["Proceed without financing"]
-    K --> M{"Who has title to the goods?"}
-    L --> M
-    M -- The buyer --> N["Use B/L directly to claim goods"]
-    M -- The bank --> O["Opportunity: Endorsement Services"]
     A(["Start: Trade Purchase Financing"]) --> n1["Context: Client is buying goods and may need<br>financing to pay suppliers before<br>receiving payment from their customers"]
     n1 --> n2["Does the client generally finance their purchases?"]
-    n2 -- Yes --> J
-    n2 -- No --> n3["No opportunity"]
+    n2 -- Yes --> J["Does the client have a financing gap<br>based on Cash Conversion Cycle?"]
+    n2 -- No --> n3["No financing opportunity"]
+    J -- Yes --> n4["Who has title to the goods?"]
+    J -- No --> L["Proceed without financing"]
+    n4 -- The bank --> T@{ label: "<span style=\"background-color:\">Opportunity: <br>Trust Receipt Loan, <br>P/N under Trade Collections, <br>Invoice Financing</span>" }
+    n4 -- The buyer --> P1@{ label: "<span style=\"background-color:\">Opportunity: <br>P/N under </span>Trade Collections<span style=\"background-color:\">, <br>Invoice Financing</span>" }
+    n4 -- Not sure --> P2@{ label: "<span style=\"background-color:\">Opportunity: <br>P/N under Trade Collections, <br>Invoice Financing</span>" }
+    L --> M["Who has title to the goods?"]
+    M -- The buyer --> N["Use B/L directly to claim goods"]
+    M -- The bank --> O["Opportunity: Endorsement Services"]
+    T --> n5["Opportunity: Endorsement Services"]
 
     n2@{ shape: diam}
+    J@{ shape: diam}
     n3@{ shape: rect}
-     K:::productBox
+    n4@{ shape: diam}
+    T@{ shape: rect}
+    P1@{ shape: rect}
+    P2@{ shape: rect}
+    M@{ shape: diam}
+    n5@{ shape: rect}
+     T:::productBox
+     P1:::productBox
+     P2:::productBox
+     O:::productBox
+     n5:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
 ```
