@@ -8,10 +8,9 @@ Create a non-product decision tree as mermaid code inside this file. Only see OD
 
 ```mermaid
 flowchart TD
-    Start(["Start: Do you need to cover a non-trade payment<br>(e.g., salaries, rent, utilities)?"]) -- No --> End0["Outside scope / no overdraft need"]
-    Start -- Yes --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
+    Start@{ label: "Start: Non-Trade Transaction<br style=\"--tw-scale-x:\">(Overdraft V.1)" } -- <br> --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
     Context --> Q1{"Does the client have sufficient funds for their business needs?"}
-    Q1 -- Yes --> End1["No non-trade finaning opportunity"]
+    Q1 -- Yes --> End1["No non-trade financing opportunity"]
     Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
     Q2 -- "Operating expenses<br>(e.g., salaries, rent, utilities)" --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
     Q2 -- "Equipment /<br>services down payment /<br>other business needs <br>(e.g., insurance, maintenance)" --> Q3{"Is this payment urgent?"}
@@ -20,10 +19,11 @@ flowchart TD
     Q3 -- Yes --> OD3["Opportunity: Overdraft<br>(bridge urgent payment)"]
     Q3 -- No --> Q4
     Q4 -- Yes --> OD2["Opportunity: Overdraft<br>(cash-flow preservation)"]
-    Q4 -- No --> End2["No non-trade finaning opportunity"]
-    Q5 -- Yes --> End3["Consider refinancing or restructuring"]
+    Q4 -- No --> End2["No non-trade financing opportunity"]
+    Q5 -- Yes --> End3["Opportunity: refinancing or restructuring"]
     Q5 -- No --> OD5["Opportunity: Overdraft<br>(bridge short-term repayment)"]
 
+    Start@{ shape: stadium}
      OD1:::Sky
      OD3:::Sky
      OD2:::Sky
@@ -77,3 +77,7 @@ Key Points:
 - No fixed repayment schedule — repay when funds are available.
 - Ideal for managing day-to-day cash flow fluctuations and unexpected expenses.
 - If used excessively or for long periods, interest and fees can become expensive.
+
+✓ Flexible credit facility
+✓ Interest on used amount only
+✓ No fixed repayment schedule

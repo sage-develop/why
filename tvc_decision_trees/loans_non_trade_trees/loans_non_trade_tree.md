@@ -28,14 +28,12 @@ Follow these steps:
 
 ```mermaid
 flowchart TD
-    Start(["Start: Non-Trade Transaction<br>(Overdraft)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
+    Start(["Start: Non-Trade Transaction<br>(Overdraft V.2)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
     Context --> Q0{"Does the client have<br>sufficient funds for<br>their business needs?"}
     Q0 -- Yes --> NoLoan["No non-trade financing opportunity"]
     Q0 -- No --> Q1{"Does the client need<br>flexible access to funds<br>for cash flow gaps?"}
-    Q1 -- Yes --> Q2{"Do they prefer no fixed<br>repayment schedule?"}
+    Q1 -- Yes --> Q2{"Do they prefer<br>repayment schedule to be fixed or not?"}
     Q1 -- No --> NotSuitable1["Opportunity: Term Loan<br>"]
-    Q2 -- Yes --> Warning{"Warning: Will they avoid<br>excessive or long-term<br>usage to prevent high costs?"}
-    Q2 -- No --> NotSuitable2["Opportunity: Term Loan<br>"]
-    Warning -- Yes --> Overdraft["Opportunity: Overdraft<br>✓ Flexible credit facility<br>✓ Interest on used amount only<br>✓ No fixed repayment schedule"]
-    Warning -- No --> Caution["Caution: Overdraft may become<br>expensive - consider alternatives<br>or usage guidelines"]
+    Q2 -- Not fixed --> Warning@{ label: "Opportunity: Overdraft<br style=\"--tw-scale-x:\">✓ Flexible credit facility<br style=\"--tw-scale-x:\">✓ Interest on used amount only<br style=\"--tw-scale-x:\">✓ No fixed repayment schedule" }
+    Q2 -- Fixed --> NotSuitable2["Opportunity: Term Loan<br>"]
 ```

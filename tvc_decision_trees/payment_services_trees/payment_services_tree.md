@@ -20,10 +20,14 @@ Follow these decision questions step by step:
 ### Decision Tree
 
 ```mermaid
+---
+config:
+  theme: redux
+---
 flowchart TD
     Start(["Payment Services Decision"]) --> Context["Context: Client needs to make payments<br>and may require currency exchange<br>or international transfer services"]
     Context --> Q1{"Is the invoice in<br>local or foreign currency?"}
-    Q1 -- Local Currency --> DT["Domestic Transfer"]
+    Q1 -- Local Currency --> DT["Opportunity: Domestic Transfer"]
     Q1 -- Foreign Currency --> Q2{"Is the payment domestic<br>or cross-border?"}
     Q2 -- Domestic --> Q3{"Is payment due<br>immediately or in the future?"}
     Q2 -- "Cross-border" --> Q4{"Is payment due<br>immediately or in the future?"}
@@ -31,4 +35,9 @@ flowchart TD
     Q3 -- Future --> FXF1["Opportunity: FX Forward + Domestic Transfer"]
     Q4 -- Immediate --> FXS2["Opportunity: FX Spot + Outward Remittance"]
     Q4 -- Future --> FXF2["Opportunity: FX Forward + Outward Remittance"]
+     FXS1:::Sky
+     FXF1:::Sky
+     FXS2:::Sky
+     FXF2:::Sky
+    classDef Sky stroke-width:1px, stroke-dasharray:none, stroke:#374D7C, fill:#E2EBFF, color:#374D7C
 ```
