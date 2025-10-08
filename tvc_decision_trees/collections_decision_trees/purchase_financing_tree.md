@@ -26,9 +26,13 @@ flowchart TD
     L --> M
     M -- The buyer --> N["Use B/L directly to claim goods"]
     M -- The bank --> O["Opportunity: Endorsement Services"]
-    A(["Start: Trade Purchase Financing"]) --> n1@{ label: "Context: Client is buying goods and may need<br>financing to pay suppliers before<br>receiving payment from their customers" }
-    n1 --> J
+    A(["Start: Trade Purchase Financing"]) --> n1["Context: Client is buying goods and may need<br>financing to pay suppliers before<br>receiving payment from their customers"]
+    n1 --> n2["Does the client generally finance their purchases?"]
+    n2 -- Yes --> J
+    n2 -- No --> n3["No opportunity"]
 
+    n2@{ shape: diam}
+    n3@{ shape: rect}
      K:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
 ```
