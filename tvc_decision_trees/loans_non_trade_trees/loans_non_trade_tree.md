@@ -28,7 +28,7 @@ Follow these steps:
 
 ```mermaid
 flowchart TD
-    Start(["Start: Non-Trade Transaction<br>(Overdraft V.2)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
+    Start(["Start: Non-Trade Transaction<br>(Overdraft Ver.2)"]) --> Context["Context: The client may face cash flow gaps or urgent funding needs when handling regular business expenses."]
     Context --> Q0{"Does the client have<br>sufficient funds for<br>their business needs?"}
     Q0 -- Yes --> NoLoan["No non-trade financing opportunity"]
     Q0 -- No --> Q1{"Does the client need<br>flexible access to funds<br>for cash flow gaps?"}

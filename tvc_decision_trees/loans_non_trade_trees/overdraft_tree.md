@@ -8,7 +8,7 @@ Create a non-product decision tree as mermaid code inside this file. Only see OD
 
 ```mermaid
 flowchart TD
-    Start@{ label: "Start: Non-Trade Transaction<br style=\"--tw-scale-x:\">(Overdraft V.1)" } -- <br> --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
+    Start@{ label: "Start: Non-Trade Transaction<br style=\"--tw-scale-x:\">(Overdraft Ver.1)" } -- <br> --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
     Context --> Q1{"Does the client have sufficient funds for their business needs?"}
     Q1 -- Yes --> End1["No non-trade financing opportunity"]
     Q1 -- No --> Q2{"What type of non-trade<br>payment is needed?"}
