@@ -20,10 +20,6 @@ Follow these decision questions step by step:
 ### Decision Tree
 
 ```mermaid
----
-config:
-  theme: redux
----
 flowchart TD
     Start(["Payment Services Decision"]) --> Context["Context: Client needs to make payments<br>and may require currency exchange<br>or international transfer services"]
     Context --> Q1{"Is the invoice in<br>local or foreign currency?"}
