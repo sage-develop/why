@@ -10,9 +10,7 @@ Create a non-product decision tree as mermaid code inside this file. Only see OD
 flowchart TD
     Start(["Start: Non-Trade Transaction<br>(Overdraft Ver.1)"]) --> Context["Context: Non-trade payment may create short-term cash-flow gaps<br>requiring temporary funding support."]
     Context --> Q1{"Does the client need financing for their business needs?"}
-    Q1 -- No --> Q4{"Does the client want to preserve<br>cash for daily operations?"}
-    Q4 -- Yes --> OD2A["Opportunity: Overdraft<br>(cash-flow preservation for operations)"]
-    Q4 -- No --> End1["No non-trade financing opportunity"]
+    Q1 -- No --> Q4["No non-trade financing opportunity"]
     Q1 -- Yes --> Q2{"What type of non-trade<br>payment is needed?"}
     Q2 -- "Operating expenses<br>(e.g., salaries, rent, utilities)" --> OD2B["Opportunity: Overdraft<br>(cash-flow preservation for expenses)"]
     Q2 -- "Equipment /<br>services down payment /<br>other business needs<br>(e.g., insurance, maintenance)" --> Q3{"Is this payment urgent?"}
@@ -21,8 +19,8 @@ flowchart TD
     Q3 -- Yes --> OD3A["Opportunity: Overdraft<br>(bridge urgent payment)"]
     Q3 -- No --> OD2C@{ label: "<span style=\"color:\">No non-trade financing opportunity</span>" }
 
+    Q4@{ shape: rect}
     OD2C@{ shape: rect}
-     OD2A:::Sky
      OD2B:::Sky
      OD1:::Sky
      OD5:::Sky
