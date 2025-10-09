@@ -4,8 +4,8 @@
 %%{init: {'theme':'dark'}}%%
 
 flowchart TD
-    Start(["We are going to ask you some questions<br>about purchases"]) --> Q1["Ask: Describe how you purchase your goods"] & n1["Do you need working capital financing?"] & n6["Do you make non-trade payment in foreign currency?"]
-    Q1 --> Q2{"Do you have any long-term arrangements<br>with the supplier, or do you issue a<br>new Purchase Order each time?"}
+    Start(["We are going to ask you some questions<br>about purchases"]) --> n11["Parallel Questions"]
+    Q1["Ask: Describe how you purchase your goods"] --> Q2{"Do you have any long-term arrangements<br>with the supplier, or do you issue a<br>new Purchase Order each time?"}
     Q2 -- "Long-term arrangement" --> LT1["How long is the arrangement for?<br>e.g. 1 year, 6 months"]
     LT1 --> LT2["What is the frequency of<br>goods delivery?"]
     Q2 -- New PO each time --> GOODS["Describe the goods you are purchasing"]
@@ -26,27 +26,38 @@ flowchart TD
     P2 --> END
     P3 --> END
     LT2 --> GOODS
-    n1 -- Yes --> n8["Is that financing for trade or non-trade needs"]
+    n1["Do you need working capital financing?"] -- Yes --> n8["Is that financing for trade or non-trade needs?"]
     n8 -- "Non-trade" --> n5["Do you need to finance non-trade payment such as salaries, rent, or utilities?"]
-    n1 -- No --> n3["No need working capital financing"]
+    n1 -- No --> n3["No opportunity for working capital financing"]
     n5 -- Yes --> n4@{ label: "<span style=\"color:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Loan Non-Trade Tree</span>" }
-    n6 -- Yes --> n7@{ label: "<span style=\"--tw-scale-x:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"--tw-scale-x:\">Payment Services Tree</span>" }
-    n8 -- Trade --> n2["Continue to trade financing"]
-    n5 -- No --> n9["No need to finance non-trade"]
-    n6 -- No --> n10["No need to make non-trade payment in foreign currency"]
+    n6["Do you make non-trade payment in foreign currency?"] -- Yes --> n7@{ label: "<span style=\"--tw-scale-x:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"--tw-scale-x:\">Payment Services Tree</span>" }
+    n8 -- Trade --> n12@{ label: "What payment method<br style=\"--tw-scale-x:\">are you using?" }
+    n5 -- No --> n9["No opportunity for non-trade payment financing"]
+    n6 -- No --> n10["No opportunity for non-trade payment services"]
+    n11 --> Q1 & n1 & n6
+    n12 -- Letter of Credit --> n2@{ label: "<span style=\"color:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Letter of Credit Purchase Financing Tree</span>" }
+    n12 -- Trade Collections --> n13@{ label: "<span style=\"--tw-scale-x:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"--tw-scale-x:\">Trade Collections Purchase Financing Tree</span>" }
+    n12 -- Open Account --> n14@{ label: "<span style=\"--tw-scale-x:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"--tw-scale-x:\">Open Account Purchase Financing Tree</span>" }
 
+    n11@{ shape: diam}
     n1@{ shape: diam}
-    n6@{ shape: diam}
     n8@{ shape: diam}
     n5@{ shape: diam}
     n3@{ shape: rect}
     n4@{ shape: rect}
+    n6@{ shape: diam}
     n7@{ shape: rect}
-    n2@{ shape: rect}
+    n12@{ shape: diam}
     n9@{ shape: rect}
     n10@{ shape: rect}
+    n2@{ shape: rect}
+    n13@{ shape: rect}
+    n14@{ shape: rect}
      n4:::Peach
      n7:::Peach
+     n2:::Peach
+     n13:::Peach
+     n14:::Peach
     classDef Peach stroke-width:1px, stroke-dasharray:none, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
     style Start fill:#1e40af,stroke:#3b82f6,color:#fff
     style LOC fill:#7c2d12,stroke:#f97316,color:#fff
