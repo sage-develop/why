@@ -10,7 +10,7 @@ flowchart TD
     n1 --> n2["Does the client generally finance their purchases?"]
     n2 -- Yes --> J["Does the client have a financing gap<br>based on Cash Conversion Cycle?"]
     n2 -- No --> n3["No financing opportunity"]
-    J -- No --> L["Proceed without financing"]
+    J -- No --> L["No financing opportunity"]
     J -- Yes --> P1@{ label: "<span style=\"background-color:\">Opportunity:<br>P/N under Open Account, <br>Invoice Financing</span>" }
 
     n2@{ shape: diam}
