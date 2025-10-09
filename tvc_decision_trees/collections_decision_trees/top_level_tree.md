@@ -4,7 +4,7 @@ Create a Mermaid decision tree for Trade Finance Collections by asking
 Start with "Start: Trade Finance Collectios Top Level"
 Then next level has 3 nodes in parallel
 Purchase Financing tree
-Trade Collections Shipping Guarantee tree
+Trade Services tree
 Payment Services tree
 
 ## Decision Tree
@@ -15,6 +15,6 @@ Payment Services tree
 flowchart TD
     A[Start: Trade Finance Collections Top Level]
     A --> B[Purchase Financing tree]
-    A --> C[Trade Collections Shipping Guarantee tree]
+    A --> C[Trade Services tree]
     A --> D[Payment Services tree]
 ```

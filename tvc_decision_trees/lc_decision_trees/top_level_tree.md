@@ -5,7 +5,7 @@ Start with "Start: Trade Finance Letter of Credit Top Level"
 The next level is "Opportunity: Letter of Credit Issuance"
 Then next level has 3 nodes in parallel:
 Purchase Financing tree
-Letter of Credit Shipping Guarantee tree
+Trade Services tree
 Payment Services tree
 
 ## Decision Tree
@@ -17,6 +17,6 @@ flowchart TD
     A[Start: Trade Finance Letter of Credit Top Level]
     A --> B[Opportunity: Letter of Credit Issuance]
     B --> C[Purchase Financing tree]
-    B --> D[Letter of Credit Shipping Guarantee tree]
+    B --> D[Trade Services tree]
     B --> E[Payment Services tree]
 ```

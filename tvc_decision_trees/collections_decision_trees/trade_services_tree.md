@@ -8,9 +8,9 @@ Create a Mermaid decision tree for Trade Finance Collections Shipping Guarantee 
 ## Decision Tree
 
 ```mermaid
-%% Trade Collections Shipping Guarantee
+%% Trade Collections Trade Services tree
 flowchart TD
-    Start[Start: Trade Collections Shipping Guarantee] --> A[Context: Client's goods have arrived but<br>documents may be delayed, creating<br>a timing gap for goods clearance]
+    Start[Start: Trade Services] --> A[Context: Client's goods have arrived but<br>documents may be delayed, creating<br>a timing gap for goods clearance]
     A --> B{"Do the goods usually arrive before the<br>shipping documents?"}
     B -- No --> C["Opportunity: Inward Bill for Collection"]
     B -- Yes --> D{"Does the buyer want to claim the goods<br>before documents arrive?"}

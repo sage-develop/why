@@ -1,6 +1,6 @@
 ## Prompt
 
-Create a Mermaid decision tree for Trade Finance Letter of Credit Shipping Guarantee by asking the following questions:
+Create a Mermaid decision tree for Letter of Credit Trade Services tree by asking the following questions:
 
 - Do the goods usually arrive before the documents?
   if No, "No Opportunity"
@@ -12,9 +12,9 @@ Create a Mermaid decision tree for Trade Finance Letter of Credit Shipping Guara
 ## Decision Tree
 
 ```mermaid
-%% Letter of Credit Shipping Guarantee
+%% Letter of Credit Trade Services tree
 flowchart TD
-    Start[Start: Letter of Credit Shipping Guarantee] --> A[Context: Client's goods have arrived but<br>documents may be delayed, creating<br>a timing gap for goods clearance]
+    Start[Start: Trade Services] --> A[Context: Client's goods have arrived but<br>documents may be delayed, creating<br>a timing gap for goods clearance]
     A --> B{Do the goods usually arrive before the documents}
     B -->|No| C[No Opportunity]
     B -->|Yes| D{Does the buyer want to claim the goods immediately upon arrival?}
