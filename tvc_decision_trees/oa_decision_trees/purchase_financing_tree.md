@@ -17,6 +17,6 @@ flowchart TD
     J@{ shape: diam}
     n3@{ shape: rect}
     P1@{ shape: rect}
-     P1:::productBox
+    P1:::productBox
     classDef productBox fill:#e1f5fe,stroke:#01579b,stroke-width:2px
 ```
