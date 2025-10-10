@@ -40,9 +40,8 @@ flowchart TD
     n11@{ shape: diam}
     n1@{ shape: diam}
     n8@{ shape: diam}
-    n5@{ shape: diam}
-    n3@{ shape: rect}
     n4@{ shape: rect}
+    n3@{ shape: rect}
     n6@{ shape: diam}
     n7@{ shape: rect}
     n12@{ shape: diam}
