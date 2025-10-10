@@ -27,12 +27,10 @@ flowchart TD
     P3 --> END
     LT2 --> GOODS
     n1["Do you need working capital financing?"] -- Yes --> n8["Is that financing for trade or non-trade needs?"]
-    n8 -- "Non-trade" --> n5["Do you need to finance non-trade payment such as salaries, rent, or utilities?"]
+    n8 -- "Non-trade" --> n4@{ label: "<span style=\"color:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Loan Non-Trade Tree</span>" }
     n1 -- No --> n3["No opportunity for working capital financing"]
-    n5 -- Yes --> n4@{ label: "<span style=\"color:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Loan Non-Trade Tree</span>" }
     n6["Do you make non-trade payment in foreign currency?"] -- Yes --> n7@{ label: "<span style=\"--tw-scale-x:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"--tw-scale-x:\">Payment Services Tree</span>" }
     n8 -- Trade --> n12@{ label: "What payment method<br style=\"--tw-scale-x:\">are you using?" }
-    n5 -- No --> n9["No opportunity for non-trade payment financing"]
     n6 -- No --> n10["No opportunity for non-trade payment services"]
     n11 --> Q1 & n1 & n6
     n12 -- Letter of Credit --> n2@{ label: "<span style=\"color:\">Branch to:</span><br style=\"--tw-scale-x:\"><span style=\"color:\">Letter of Credit Purchase Financing Tree</span>" }
@@ -48,7 +46,6 @@ flowchart TD
     n6@{ shape: diam}
     n7@{ shape: rect}
     n12@{ shape: diam}
-    n9@{ shape: rect}
     n10@{ shape: rect}
     n2@{ shape: rect}
     n13@{ shape: rect}
